@@ -34,8 +34,8 @@ def doMissions():
     
     # Find the vehicle checkbox and check it
     try:
-        checkbox=browser.find_by_id('vehicle_checkbox_240277').check()
-        checkbox=browser.find_by_id('vehicle_checkbox_241396').check()
+        #checkbox=browser.find_by_id('vehicle_checkbox_240277').check()
+        checkbox=browser.find_by_xpath('//*[contains(@id, "checkbox")]').check()        
         
     except:
         time.sleep(1)
