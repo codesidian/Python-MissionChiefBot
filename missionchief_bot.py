@@ -1,7 +1,7 @@
 from splinter import Browser
 import time
-
 focus=0
+
 def login(username,password):
 
     print("Logging in")
@@ -55,16 +55,18 @@ with open('account.txt', 'r') as f:
     password = f.readline().strip()
 
 # Setting up browser
-with Browser() as browser:
-    login(username,password)
-    while True:
-        try:
-            if focus==1:
-                focus=0
-            else:
-                focus=1
-            doMissions()
-        except:
-            continue
+
+executable_path = {'executable_path':'./chromedriver.exe'}
+browser = Browser('chrome', **executable_path)
+login(username,password)
+while True:
+    try:
+        if focus==1:
+            focus=0
         else:
-            doMissions()
+            focus=1
+        doMissions()
+    except:
+        continue
+    else:
+        doMissions()
