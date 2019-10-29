@@ -6,7 +6,7 @@ def login(username,password):
 
     print("Logging in")
     # Visit URL
-    url = "https://www.missionchief.com/users/sign_in"
+    url = "https://www.missionchief.co.uk/users/sign_in"
     browser.visit(url)
     # Filling in login information
     browser.fill("user[email]",username)
