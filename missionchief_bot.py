@@ -59,9 +59,9 @@ def doMissions():
    print("MISSION " + mission_str +":" + " COULDN'T GET LINK")
   try:
    print("MISSION " + mission_str +":" + " SELECTING UNIT TO DESPATCH")   
-   checkbox=browser.find_by_xpath('//*[contains(@id, "checkbox")]')
+   checkbox=browser.find_by_css('input[class="vehicle_checkbox"]')
    for check in checkbox:
-       check.check()    
+    check.check()
   except:
    print("MISSION " + mission_str +":" + " NO UNITS TO DESPATCH")   
   try:
