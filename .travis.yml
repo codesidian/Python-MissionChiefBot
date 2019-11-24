@@ -5,5 +5,5 @@ install:
   - pip install -r requirements.txt
   - npm install
 script:
-  - cd tests
+  - cd jackbayliss/Python-MissionChiefBot/tests
   - py -m unittest missionchief_bot_tests.py
