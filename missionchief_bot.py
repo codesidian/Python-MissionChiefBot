@@ -1,11 +1,17 @@
 from splinter import Browser
 import time
+import platform
+import os
+operatingsystem = platform.system()
 hrefs= []
+path = os.path.dirname(os.path.realpath(__file__))
+ 
 # Get URL from file
-with open('url.txt', 'r') as f:
+with open(path + "/url.txt", 'r') as f:
     baseurl = f.readline().strip()
 
-def init():
+class MissonChiefBot:
+ def init(self):
     logged_in = login(username,password)
     if logged_in:
      while True:
@@ -29,8 +35,11 @@ def login(username,password):
      # check we are logged in- by grabbing a random tag only visible on log in.
      alliance = browser.find_by_id('alliance_li')
      print("Logged in")
-     return True
-    except splinter.exceptions.ElementDoesNotExist: 
+     if alliance['class']=="dropdown":
+      return True
+     else:
+      return False
+    except Exception: 
      return False
 
 def getMissions():
@@ -44,6 +53,7 @@ def getMissions():
         for link in links: 
          hrefs.append(link['href'])
         doMissions()
+        return True;
     except:
         time.sleep(1)
 
@@ -73,13 +83,24 @@ def doMissions():
 
     
 # Taking account information from file
-with open('account.txt', 'r') as f:
+with open(path + '/account.txt', 'r') as f:
     username = f.readline().strip()
     password = f.readline().strip()
     
 
 # Setting up browser
+if operatingsystem == "Windows":
+ executable_path = {'executable_path': path +'/chromedriver.exe'}
+elif operatingsystem == "Linux":
+  executable_path = {'executable_path': path +'/linux/chromedriver'}
 
-executable_path = {'executable_path':'./chromedriver.exe'}
+elif operatingsystem == "Darwin":
+  executable_path = {'executable_path': path+'/mac/chromedriver'}
+ 
 browser = Browser('chrome', **executable_path)
-init()
+
+def begin(): 
+ MissonChiefBot().init()
+
+if __name__ == '__main__':
+ begin()
