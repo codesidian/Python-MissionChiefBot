@@ -1,6 +1,6 @@
 from splinter import Browser
 import time
-hrefs= [];
+hrefs= []
 # Get URL from file
 with open('url.txt', 'r') as f:
     baseurl = f.readline().strip()
@@ -9,6 +9,7 @@ def init():
     logged_in = login(username,password)
     if logged_in:
      while True:
+      hrefs.clear()
       getMissions()
       print("Sleeping for 45 seconds...")
       time.sleep(45)
@@ -28,30 +29,30 @@ def login(username,password):
      # check we are logged in- by grabbing a random tag only visible on log in.
      alliance = browser.find_by_id('alliance_li')
      print("Logged in")
-     return True;
+     return True
     except splinter.exceptions.ElementDoesNotExist: 
-     return False;
+     return False
 
 def getMissions():
-    print("Getting missions");
+    print("Getting missions")
     url = baseurl
     browser.visit(url)
     # Finding links for missions
     try:
         links = browser.find_link_by_partial_href('/missions/')
-        print(str(len(links)) + " missons found");
+        print(str(len(links)) + " missons found")
         for link in links: 
          hrefs.append(link['href'])
-        doMissions();
+        doMissions()
     except:
         time.sleep(1)
 
 def doMissions():
  count = 0
  for href in hrefs:
-  time.sleep(5);   
+  time.sleep(5)   
   count+=1  
-  mission_str = str(count);
+  mission_str = str(count)
   try:
    print("MISSION " + mission_str +":" + " VISITING MISSION")
    browser.visit(href)
