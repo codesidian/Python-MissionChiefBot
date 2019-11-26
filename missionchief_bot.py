@@ -1,6 +1,7 @@
 from splinter import Browser
 import time
 import platform
+import random
 import os
 operatingsystem = platform.system()
 hrefs= []
@@ -17,8 +18,9 @@ class MissonChiefBot:
      while True:
       hrefs.clear()
       getMissions()
-      print("Sleeping for 45 seconds...")
-      time.sleep(45)
+      timer = random.randint(30,60)
+      print('Sleeping for',timer,'seconds...')
+      time.sleep(timer)
     else: 
      print("Couldn't log in...")
 def login(username,password):
