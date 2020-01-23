@@ -4,6 +4,12 @@ vehicles = {
 "Water Ladder",
 "Light 4X4 Pump (L4P)"
 },
+"Police Cars": {
+"Incident response vehicle (IRV)"
+},
+"": {
+"Ambulance"
+},
 "Misc" : {
 "Aerial Appliance",
 "Fire Officer",
