@@ -11,6 +11,7 @@ Once done open the account.txt and replace corresponding lines with your account
 Once you're done, do the following in a cmd - it will run the bot for you.
 `run missionchief_bot.py`
 
+**This bot only works with a vanilla / default account, so don't expect it to work with custom callsigns.**
 
 ## Issues / Bugs / Errors
 
