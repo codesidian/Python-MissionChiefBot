@@ -1,10 +1,10 @@
 import random
 vehicles = {
-"Fire Engine": {
+"Fire engines": {
 "Water Ladder",
 "Light 4X4 Pump (L4P)"
 },
-"Police Cars": {
+"Police cars": {
 "Incident response vehicle (IRV)"
 },
 "": {
@@ -22,3 +22,6 @@ vehicles = {
 
 def randomint():
  return random.randint(1, 30)
+
+
+

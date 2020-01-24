@@ -125,27 +125,35 @@ def doMissions():
       else:
        print("Couldn't find a direct match...")
        print("Checking keywords..")
+       # For each category in our JSON object
        for category in vehicles:
-        for i in range(int(requirement['qty'])):
-         for vehicle in vehicles[category]:
+         # If the cateogry matches the requirement
+        if(category in requirement['requirement']):
+          # qty required
+         for i in range(int(requirement['qty'])):
+           # Check vehicle is in the object
+          for vehicle in vehicles[category]:
+           print("found vehicle")
            print(f"Checking {vehicle} against {label.text}")
+           # Find label 
            if(vehicle in label.text):
-            checkid = label['id'].split("_")[3] 
-            checkbox=browser.find_by_css('input[class="vehicle_checkbox"]')
-            for check in checkbox:
-                if(check['value']==checkid):
-                    if(check['value']==checkid):
-                      print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                      print(Fore.GREEN + f"Attempting to despatch {label.text}")
-                      check.check()
-                      print(Fore.GREEN + f"{label.text} despatched!")
-                      print( Fore.GREEN +"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                      despatched.append(missionId)
-            browser.find_by_name('commit').click()
-            Style.RESET_ALL
-           else:
-            print(Fore.RED + "All the vehicles are out that we need")
-            Style.RESET_ALL
+             checkid = label['id'].split("_")[3] 
+             checkbox=browser.find_by_css('input[class="vehicle_checkbox"]')
+           # Find correct checkbox
+             for check in checkbox:
+                 if(check['value']==checkid):
+                     if(check['value']==checkid):
+                       print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                       print(Fore.GREEN + f"Attempting to despatch {label.text}")
+                       check.check()
+                       print(Fore.GREEN + f"{label.text} despatched!")
+                       print( Fore.GREEN +"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                       despatched.append(missionId)
+         browser.find_by_name('commit').click()
+         Style.RESET_ALL
+        else:
+         print(Fore.RED + "NO MATCH, OR NO VEHICLE AVAILABLE")
+         Style.RESET_ALL
 
         Style.RESET_ALL
 
