@@ -64,56 +64,59 @@ def getMissions():
         time.sleep(1)
 
 def getRequirements(missionId):
-  requirementsurl = baseurl + "/einsaetze/3?mission_id=" + missionId
+  requirementsurl = browser.links.find_by_partial_href('/einsaetze/')[0]['href']
+  print(f"Visiting requirements {requirementsurl}")
   browser.visit(requirementsurl)
   requiredlist = []
   requirements = browser.find_by_tag('td')
   Style.RESET_ALL
   print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   for index, r in enumerate(requirements):
-    if "Required" in r.text:
-     if "Station" not in r.text:
-      requirement = r.text.replace('Required','').strip();
-      qty = requirements[index+1].text
-      print(f"Requirement found :   {str(qty)} x {str(requirement)}")
-      requiredlist.append({'requirement':requirement,'qty': qty })
+    if r.text:
+     if "Required" in r.text:
+      if "Station" not in r.text:
+       requirement = r.text.replace('Required','').strip().lower();
+       qty = requirements[index+1].text
+       print(f"Requirement found :   {str(qty)} x {str(requirement)}")
+       requiredlist.append({'requirement':requirement,'qty': qty })
   print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   Style.RESET_ALL
+  if(len(requiredlist)==0):
+   requiredlist.append({'requirement':'ambulance','qty': 1 })
   return requiredlist
     
 def doMissions():
  count = 0
  for href in hrefs:
   count+=1  
-  try:
-   browser.visit(href)
-   mission_str = str(count)
-   mission_text = browser.find_by_id('missionH1').text
-   print("MISSION " + mission_str +": " + mission_text)
-   missionId = href.split("/")[4]
+  browser.visit(href)
+  mission_str = str(count)
+  mission_text = browser.find_by_id('missionH1').text
+  print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+  Style.RESET_ALL
+  print("MISSION " + mission_str +": " + mission_text)
+  missionId = href.split("/")[4]
+  if(len(despatched)>0):
    for miss in despatched:
-     if(miss==missionId):
-       print(f"Already despatched this mission {missionId} - Skipping it")
-       rannum = randomint()
-       print(Fore.CYAN + f"Sleeping for  {rannum} - seconds")
-       Style.RESET_ALL
-       time.sleep(rannum)
-       continue
+    if(miss==missionId):
+     print(f"Already despatched this mission {missionId} - Skipping it")
+    else:
+     Style.RESET_ALL
+     doMission(href,missionId)
+  else:
+   doMission(href,missionId)
    Style.RESET_ALL
-   print(Fore.CYAN + "Getting requirements")
+ return
+ 
+
+def doMission(href,missionId):
+   qtydes=0
    requiredlist=getRequirements(missionId)
-   print(Fore.CYAN + "Got Requirements")
-   Style.RESET_ALL
+   print("Got Requirements")
    browser.visit(href)
    labels=browser.find_by_css('label[class="mission_vehicle_label"]')
-
    for requirement in requiredlist:
-    try:
-      # Here we are seeing is any labels exists (i.e do we even have any vehicles we can despatch- if we don't throw print the below.)
-     print(labels.first);
-    except:
-      print(Fore.RED + "MISSION " + mission_str +":" + "CAN NOT DESPATCH A UNIT, ALL IN USE OR UNIT ALREADY DESPATCHED")
-      Style.RESET_ALL
+    qtytodes = int(requirement['qty'])
     for label in labels:
       if(requirement['requirement'] in label.text):
        print("Direct match found...")
@@ -129,11 +132,8 @@ def doMissions():
        for category in vehicles:
          # If the cateogry matches the requirement
         if(category in requirement['requirement']):
-          # qty required
-         for i in range(int(requirement['qty'])):
            # Check vehicle is in the object
           for vehicle in vehicles[category]:
-           print("found vehicle")
            print(f"Checking {vehicle} against {label.text}")
            # Find label 
            if(vehicle in label.text):
@@ -143,25 +143,25 @@ def doMissions():
              for check in checkbox:
                  if(check['value']==checkid):
                      if(check['value']==checkid):
-                       print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                       print(Fore.GREEN + f"Attempting to despatch {label.text}")
-                       check.check()
-                       print(Fore.GREEN + f"{label.text} despatched!")
-                       print( Fore.GREEN +"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                       despatched.append(missionId)
-         browser.find_by_name('commit').click()
-         Style.RESET_ALL
-        else:
-         print(Fore.RED + "NO MATCH, OR NO VEHICLE AVAILABLE")
-         Style.RESET_ALL
+                       if(qtydes<qtytodes):
+                        Style.RESET_ALL
+                        print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        print(Fore.GREEN + f"Attempting to despatch {label.text}")
+                        check.check()
+                        qtydes+=1
+                        print( Fore.GREEN +f"{qtydes} to despatchh")
+                        print(Fore.GREEN + f"{label.text} despatched!")
+                        print( Fore.GREEN +"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        Style.RESET_ALL
+                       else:
+                        print( Fore.GREEN +"Max qty already despatched")
 
-        Style.RESET_ALL
+          despatched.append(missionId)
+          browser.find_by_name('commit').click()
+          Style.RESET_ALL
 
-  except Exception as e:
-   print(Fore.RED + "MISSION " + mission_str +":" + "CAN NOT DESPATCH A UNIT, ALL IN USE OR UNIT ALREADY DESPATCHED")
-   Style.RESET_ALL
+      
 
-    
 # Taking account information from file
 with open(path + '/account.txt', 'r') as f:
     username = f.readline().strip()
