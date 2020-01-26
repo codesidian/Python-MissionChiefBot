@@ -1,4 +1,8 @@
 class Mission:
+    #ID - Mission ID (String)
+    #name - Mission Name (String)
+    #requirements - Mission Requirements (list)
+    #status - Mission Status (int)
     def __init__(self, ID,name,requirements,status=0):
         self.name = name
         self.ID = ID
