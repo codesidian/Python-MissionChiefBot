@@ -9,8 +9,6 @@ from mission import Mission
 init()
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
-despatched = []
-checkedrecently= []
 
 
 
@@ -58,6 +56,7 @@ class MissonChiefBot:
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
         self.missionList.append(currMission)
+
       except AlreadyExistsException:
         print("mission except")
         continue
@@ -83,6 +82,7 @@ class MissonChiefBot:
         vehicleName = browser.find_by_tag('h1').text
         vehicleType = browser.links.find_by_partial_href('/fahrzeugfarbe/').text
         vehicleStatus = browser.find_by_xpath("//span[contains(concat(' ',normalize-space(@class),' '),' building_list_fms')]").text        
+        print(f"status {vehicleStatus}")
         currVehicle = Vehicle(vehicleId,vehicleName,vehicleType,vehicleStatus)
         self.vehicleList.append(currVehicle)
       except AlreadyExistsException:
@@ -92,7 +92,7 @@ class MissonChiefBot:
   def doMissions(self):
     self.buildMissions()
     self.buildVehicles()
-    print("printing data")
+
     for mission in self.missionList:
         print(mission.getID(),mission.getName(),mission.getStatus())
     for vehicle in self.vehicleList:
@@ -100,14 +100,14 @@ class MissonChiefBot:
     
     for mission in self.missionList:
       browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
-      if(len(despatched)==0):
+      if(mission.getStatus()=="0" or mission.getStatus()==0):
         self.despatchMission(mission)
+      elif(mission.getStatus()=="1"):
+      # Not all units despatched, need to add addtional 
+        pass
       else:
-        for despatch in despatched:
-          if(despatch==mission.getID()):
-            print(Fore.MAGENTA + f"¬¬¬¬ Mission {mission.getID()} was already despatched, doing nothing..")
-          else:
-            self.despatchMission(mission.getID())
+       print(Fore.MAGENTA + f"¬¬¬¬ Mission {mission.getID()} was already despatched, doing nothing..")
+
     #  Sleep after mission set.
     sleep()
   
@@ -121,14 +121,12 @@ class MissonChiefBot:
       try: 
         print(labels.first)
         for label in labels:
-          for category in vehicles:
-            for vehicle in vehicles[category]:
-              if(label.text == vehicle):
+            for vehicle in self.vehicleList:
+              if(label.text == vehicle.getName() and vehicle.availableDespatch()):
                 checkid = label['id'].split("_")[3] 
                 checkbox=browser.find_by_css('input[class="vehicle_checkbox"]')
                 for check in checkbox:
-                  if(check['value']==checkid):
-                                      
+                  if(check['value']==checkid):               
                     if(des<todes):
                       print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")              
                       print(Fore.GREEN + f"Attempting to check {label.text}")
@@ -141,11 +139,16 @@ class MissonChiefBot:
       except Exception as e:
         print("Nothing to despatch");           
         continue
-    browser.find_by_name('commit').click()	                       
-    print(f"{des} units despatched")
+                    
     if(checkedunits==True):
-      if(missionId not in despatched):
-        despatched.append(missionId)
+      browser.find_by_name('commit').click()	 
+      print(f"{des} units despatched")
+      # If we have despatched the right amount of units set complete
+      if(todes==des):
+        mission.setStatus("2")
+        # Set to partly despatched
+      else:
+        mission.setStatus("1")
     Style.RESET_ALL  
       
 def sleep():
