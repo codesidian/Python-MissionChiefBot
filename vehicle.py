@@ -2,7 +2,7 @@ class Vehicle:
     def __init__(self, ID,name,vType,status):
         self.name = name
         self.ID = ID
-        self.status=0
+        self.status = status
         self.vType = vType
         
     def getName(self):
@@ -15,3 +15,5 @@ class Vehicle:
         return self.vType
     def setStatus(self, status):
         self.status = status
+    def __eq__(self, other):
+        return self.ID == other.ID

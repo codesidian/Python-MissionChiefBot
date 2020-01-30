@@ -20,3 +20,5 @@ class Mission:
         self.status = status
     def getRequirements(self):
         return self.requirements
+    def __eq__(self, other):
+        return self.ID == other.ID

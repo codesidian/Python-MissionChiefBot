@@ -6,36 +6,59 @@ from helpers import vehicles,randomint
 from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
+from despatch import Despatch
 init()
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
-despatched = []
 checkedrecently= []
 
+#Skip doing missions, just build data. (for testing)
+JUST_BUILD_DATA = False
 
 
 class AlreadyExistsException(Exception):
     pass
+class NothingToDespatch(Exception):
+    pass
+
+
 
 # Get URL from file
 with open(path + "/url.txt", 'r') as f:
-    baseurl = f.readline().strip()
+    BASE_URL = f.readline().strip()
 
 class MissonChiefBot:
   def __init__(self):
     self.hrefs= []
     self.missionList = []
     self.vehicleList = []
+    self.despatches = []
     logged_in = login(username,password)
     if logged_in:
+      self.buildVehicles()
       while True:
         self.doMissions()
     else: 
       print("Couldn't log in...")
      
   def buildMissions(self):
-    print("Building Missions")
-    url = baseurl
+    print("Removing Completed")
+    #Check and remove completed missions
+    oldMissions = self.missionList
+    for oldMission in oldMissions:
+      browser.visit("https://www.missionchief.co.uk/missions/"+oldMission.getID())
+      try:
+        if browser.find_by_css('missionNotFound'):
+          print(oldMission.getName() + " was completed.")
+          self.missionList.remove(oldMission)
+          for v in self.despatches[oldMission.getID()].getVehicles():
+            self.vehicleList[v].setStatus(1)
+          self.despatches.remove(oldMission)
+      except ElementDoesNotExist:
+        continue
+      
+    print("Building New Missions")
+    url = BASE_URL
     hrefs = []
     browser.visit(url)
     links = browser.links.find_by_partial_href('/missions/')
@@ -47,13 +70,10 @@ class MissonChiefBot:
       missionId = href.split("/")[4]
       try:
         for mission in self.missionList:
-          if mission.getID == missionId:
-            print("ids matched")
-            print(mission.getID)
-            print(missionId)
+          if mission.getID() == missionId:
             #since the mission is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit(href)
+        browser.visit("https://www.missionchief.co.uk/missions/"+missionId)
         missionName = browser.find_by_id('missionH1').text          
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
@@ -61,11 +81,12 @@ class MissonChiefBot:
       except AlreadyExistsException:
         print("mission except")
         continue
-      time.sleep(5)  
+      #time.sleep(5)
+
 
   def buildVehicles(self):
     print("Building Vehicles")
-    url = baseurl
+    url = BASE_URL
     hrefs = []
     browser.visit(url)
     links = browser.links.find_by_partial_href('/vehicles/')
@@ -79,86 +100,101 @@ class MissonChiefBot:
           if vehicle.getID == vehicleId:
             #since the vehicle is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit(href)
+        browser.visit("https://www.missionchief.co.uk/vehicles/"+vehicleId)
         vehicleName = browser.find_by_tag('h1').text
         vehicleType = browser.links.find_by_partial_href('/fahrzeugfarbe/').text
-        vehicleStatus = browser.find_by_xpath("//span[contains(concat(' ',normalize-space(@class),' '),' building_list_fms')]").text        
+        vehicleStatus = browser.find_by_xpath('//span[contains(@class, "building_list_fms")]').text    
         currVehicle = Vehicle(vehicleId,vehicleName,vehicleType,vehicleStatus)
         self.vehicleList.append(currVehicle)
       except AlreadyExistsException:
         continue
-      time.sleep(5)
+      #time.sleep(5)
       
   def doMissions(self):
     self.buildMissions()
-    self.buildVehicles()
+    print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("printing data")
     for mission in self.missionList:
         print(mission.getID(),mission.getName(),mission.getStatus())
     for vehicle in self.vehicleList:
         print(vehicle.getID(),vehicle.getName(),vehicle.getStatus(),vehicle.getType()) 
-    
-    for mission in self.missionList:
-      browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
-      if(len(despatched)==0):
-        self.despatchMission(mission)
-      else:
-        for despatch in despatched:
-          if(despatch==mission.getID()):
-            print(Fore.MAGENTA + f"¬¬¬¬ Mission {mission.getID()} was already despatched, doing nothing..")
-          else:
-            self.despatchMission(mission.getID())
+    print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+    if not JUST_BUILD_DATA:
+      print("Doing missions")
+      for mission in self.missionList:
+        print("Checking if "+ mission.getName()+" has units responding")
+        if(mission not in self.despatches):
+          self.despatchVehicles(mission)
+        else:
+          #We need to make sure that there's no missions with half dispatches (if there weren't enough vehicles to begin with)
+          for despatch in self.despatches:
+            if despatch == mission:
+              totalVehiclesRequired = 0
+              for requirement in mission.getRequirements():
+                totalVehiclesRequired += int(requirement['qty'])
+              if totalVehiclesRequired > len(despatch.getVehicles()):
+                #If the amount of despatched vehicles is less than required. We can retry the dispatch
+                print(mission.getName() + " still needs vehicles. Despatching...")
+                self.despatchVehicles(mission)
+                
+          print(f"Mission {mission.getID()} was already despatched, doing nothing..")
+    else:
+      print("Not doing missions. Debug build only. ")
+          
     #  Sleep after mission set.
     sleep()
-  
-  def despatchMission(self,mission):
+
+  def despatchVehicles(self,mission):
     print(f"Going to mission {mission.getID()}")
-    labels=browser.find_by_css('label[class="mission_vehicle_label"]')
+    browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
+    print("Checking requirements " + mission.getName())
+    despatchedVehicles = []
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
       des = 0
       checkedunits = False
       try: 
-        print(labels.first)
-        for label in labels:
-          for category in vehicles:
+        for category in vehicles:
+          #Only need to check for required types
+          if requirement['requirement'] == category:
+            print("Mission needs " + category)
             for vehicle in vehicles[category]:
-              if(label.text == vehicle):
-                checkid = label['id'].split("_")[3] 
-                checkbox=browser.find_by_css('input[class="vehicle_checkbox"]')
-                for check in checkbox:
-                  if(check['value']==checkid):
-                                      
-                    if(des<todes):
-                      print(Fore.GREEN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")              
-                      print(Fore.GREEN + f"Attempting to check {label.text}")
-                      check.check()
-                      checkedunits = True
-                      print(Fore.GREEN + f"{label.text} checked!")	             
-                      des+=1                       
-                      print( Fore.GREEN +"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                    Style.RESET_ALL
-      except Exception as e:
-        print("Nothing to despatch");           
-        continue
-    browser.find_by_name('commit').click()	                       
+              for ownedVehicle in self.vehicleList:
+                if(ownedVehicle.getType() == vehicle and (ownedVehicle.getStatus() == '1' or ownedVehicle.getStatus() == '2')):
+                  print("We have a " + category + " " + ownedVehicle.getType() + " available")
+                  print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
+                  checkid = ownedVehicle.getID()
+                  checkbox=browser.find_by_id('vehicle_checkbox_'+ownedVehicle.getID())    
+                  if(des<todes):
+                    checkbox.check()
+                    checkedunits = True            
+                    des+=1
+                    despatchedVehicles.append(ownedVehicle.getID())   
+                    ownedVehicle.setStatus(3)
+            #we can skip the next categories as this requirement has now been fulfilled
+            break
+      except NothingToDespatch:
+        print("Nothing to despatch")  
+        continue            
     print(f"{des} units despatched")
     if(checkedunits==True):
-      if(missionId not in despatched):
-        despatched.append(missionId)
-    Style.RESET_ALL  
+      browser.find_by_name('commit').click()
+      if(mission not in self.despatches):
+        currDespatch = Despatch(mission.getID(),despatchedVehicles,10)
+        self.despatches.append(currDespatch)
+    else:
+      print("Nothing to despatch") 
       
 def sleep():
-    rannum = randomint()
-    print(Fore.CYAN + f"Sleeping for {str(rannum)} seconds")
+    print(Fore.CYAN + f"Sleeping for {str(15)} seconds")
     Style.RESET_ALL
-    time.sleep(rannum)
+    time.sleep(15)
    
 def login(username,password):
     print(Fore.CYAN + "Logging in")
     Style.RESET_ALL
     # Visit URL
-    url = baseurl+"/users/sign_in"
+    url = BASE_URL+"/users/sign_in"
     browser.visit(url)
     # Filling in login information
     browser.fill("user[email]",username)
@@ -190,7 +226,7 @@ def getRequirements(missionId):
     if r.text:
      if "Required" in r.text:
       if "Station" not in r.text:
-       requirement = r.text.replace('Required','').strip().lower();
+       requirement = r.text.replace('Required','').strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
