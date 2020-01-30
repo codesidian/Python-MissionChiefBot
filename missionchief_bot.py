@@ -35,7 +35,13 @@ class MissonChiefBot:
     if logged_in:
       self.buildVehicles()
       while True:
-        self.doMissions()
+        try:
+          self.doMissions()
+        except Exception as e:
+          print(Fore.RED + "Oh no, an error occurred!" +Style.RESET_ALL)
+          print(e)
+          print(Fore.RED + "PLEASE CREATE AN ISSUE CONTAINING THIS OUTPUT ON GITHUB SO WE CAN DEBUG IT! :)" +Style.RESET_ALL)
+          break
     else: 
       print("Couldn't log in...")
      
@@ -47,7 +53,7 @@ class MissonChiefBot:
       browser.visit("https://www.missionchief.co.uk/missions/"+oldMission.getID())
       try:
         if browser.find_by_css('missionNotFound'):
-          print(oldMission.getName() + " was completed.")
+          print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           self.missionList.remove(oldMission)
           for v in self.despatches[oldMission.getID()].getVehicles():
             self.vehicleList[v].setStatus(1)
@@ -78,7 +84,6 @@ class MissonChiefBot:
         self.missionList.append(currMission)
 
       except AlreadyExistsException:
-        print("mission except")
         continue
       #time.sleep(5)
 
@@ -111,12 +116,13 @@ class MissonChiefBot:
       
   def doMissions(self):
     self.buildMissions()
-    print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("printing data")
+    print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+    print(Fore.MAGENTA +"Your Missions"+Style.RESET_ALL)
     for mission in self.missionList:
-        print(mission.getID(),mission.getName(),mission.getStatus())
+        print("Name: " + mission.getName())
+    print(Fore.MAGENTA +"Your Vehicles"+Style.RESET_ALL)
     for vehicle in self.vehicleList:
-        print(vehicle.getID(),vehicle.getName(),vehicle.getStatus(),vehicle.getType()) 
+        print("Name: "+ vehicle.getName()+ " | Type: " +vehicle.getType()) 
     print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     if not JUST_BUILD_DATA:
       print("Doing missions")
@@ -146,7 +152,7 @@ class MissonChiefBot:
   def despatchVehicles(self,mission):
     print(f"Going to mission {mission.getID()}")
     browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
-    print("Checking requirements " + mission.getName())
+    print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
@@ -156,7 +162,7 @@ class MissonChiefBot:
         for category in vehicles:
           #Only need to check for required types
           if requirement['requirement'] == category:
-            print("Mission needs " + category)
+            print("Mission needs "+str(todes)+" " + category)
             for vehicle in vehicles[category]:
               for ownedVehicle in self.vehicleList:
                 if(ownedVehicle.getType() == vehicle and (ownedVehicle.getStatus() == '1' or ownedVehicle.getStatus() == '2')):
@@ -185,13 +191,11 @@ class MissonChiefBot:
       print("Nothing to despatch") 
       
 def sleep():
-    print(Fore.CYAN + f"Sleeping for {str(15)} seconds")
-    Style.RESET_ALL
+    print(Fore.CYAN + f"Sleeping for {str(15)} seconds"+Style.RESET_ALL)
     time.sleep(15)
    
 def login(username,password):
-    print(Fore.CYAN + "Logging in")
-    Style.RESET_ALL
+    print(Fore.CYAN + "Logging in"+Style.RESET_ALL)
     # Visit URL
     url = BASE_URL+"/users/sign_in"
     browser.visit(url)
@@ -218,9 +222,7 @@ def getRequirements(missionId):
   browser.visit(requirementsurl)
   requiredlist = []
   requirements = browser.find_by_tag('td')
-  Style.RESET_ALL
-  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-  Style.RESET_ALL
+  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
   for index, r in enumerate(requirements):
     if r.text:
      if "Required" in r.text:
@@ -229,8 +231,7 @@ def getRequirements(missionId):
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
-  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-  Style.RESET_ALL
+  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
   if(len(requiredlist)==0):
    requiredlist.append({'requirement':'ambulance','qty': 1 })
 
