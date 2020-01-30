@@ -10,8 +10,6 @@ from despatch import Despatch
 init()
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
-checkedrecently= []
-
 #Skip doing missions, just build data. (for testing)
 JUST_BUILD_DATA = False
 
@@ -78,6 +76,7 @@ class MissonChiefBot:
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
         self.missionList.append(currMission)
+
       except AlreadyExistsException:
         print("mission except")
         continue
