@@ -93,7 +93,7 @@ class MissonChiefBot:
     url = BASE_URL
     hrefs = []
     browser.visit(url)
-    links = browser.links.find_by_partial_href('/vehicles/')
+    links = browser.find_by_xpath('//a[contains(@id, "vehicle_button")]')
     for link in links:
         hrefs.append(link['href'])
     print(f"{str(len(links))} vehicles/s found")
