@@ -131,6 +131,7 @@ class MissonChiefBot:
         if(mission not in self.despatches):
           self.despatchVehicles(mission)
         else:
+          print('we here')
           #We need to make sure that there's no missions with half dispatches (if there weren't enough vehicles to begin with)
           for despatch in self.despatches:
             if despatch == mission:
@@ -142,7 +143,7 @@ class MissonChiefBot:
                 print(mission.getName() + " still needs vehicles. Despatching...")
                 self.despatchVehicles(mission)
                 
-          print(f"Mission {mission.getID()} was already despatched, doing nothing..")
+          print(f"Mission {mission.getName()} was already despatched, doing nothing..")
     else:
       print("Not doing missions. Debug build only. ")
           
@@ -150,7 +151,7 @@ class MissonChiefBot:
     sleep()
 
   def despatchVehicles(self,mission):
-    print(f"Going to mission {mission.getID()}")
+    print(f"Going to mission {mission.getName()}")
     browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
     print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
@@ -165,25 +166,35 @@ class MissonChiefBot:
             print("Mission needs "+str(todes)+" " + category)
             for vehicle in vehicles[category]:
               for ownedVehicle in self.vehicleList:
-                if(ownedVehicle.getType() == vehicle and (ownedVehicle.getStatus() == '1' or ownedVehicle.getStatus() == '2')):
+                if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
                   print("We have a " + category + " " + ownedVehicle.getType() + " available")
-                  print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
                   checkid = ownedVehicle.getID()
                   checkbox=browser.find_by_id('vehicle_checkbox_'+ownedVehicle.getID())    
+                  # If amount of despatched is less than required.
                   if(des<todes):
+                    print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
                     checkbox.check()
                     checkedunits = True            
                     des+=1
                     despatchedVehicles.append(ownedVehicle.getID())   
-                    ownedVehicle.setStatus(3)
+                    ownedVehicle.setDespatched()
             #we can skip the next categories as this requirement has now been fulfilled
             break
       except NothingToDespatch:
         print("Nothing to despatch")  
         continue            
-    print(f"{des} units despatched")
+    # If units have been checked, we need to despatch them.
     if(checkedunits==True):
       browser.find_by_name('commit').click()
+      print(f"{des} units despatched")
+      ########################################
+      ### Example of getting vehicle arrival time, might be useful information to grab.
+      if ownedVehicle.getStatus() == '3':
+        time.sleep(5)
+        remaining = browser.find_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
+        print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
+      
+      ########################################
       if(mission not in self.despatches):
         currDespatch = Despatch(mission.getID(),despatchedVehicles,10)
         self.despatches.append(currDespatch)
