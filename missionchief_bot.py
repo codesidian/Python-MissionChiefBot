@@ -254,16 +254,23 @@ with open(path + '/account.txt', 'r') as f:
     username = f.readline().strip()
     password = f.readline().strip()
     
+if not os.path.exists("chromedriver.exe"):
+  print("Please make sure chromedriver.exe is in the project folder."+
+        "\nGet the correct one for your version of chrome here:"+
+        "\nhttps://chromedriver.chromium.org/downloads")
+  raise SystemExit
 
 # Setting up browser
 if operatingsystem == "Windows":
- executable_path = {'executable_path': path +'/chromedriver.exe'}
+  executable_path = {'executable_path': path +'/chromedriver.exe'}
 elif operatingsystem == "Linux":
   executable_path = {'executable_path': path +'/linux/chromedriver'}
 
 elif operatingsystem == "Darwin":
   executable_path = {'executable_path': path+'/mac/chromedriver'}
- 
+
+
+  
 browser = Browser('chrome', **executable_path)
 
 def begin(): 
