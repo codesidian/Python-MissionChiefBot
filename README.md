@@ -2,6 +2,7 @@
 
  **A small bot for the game missionchief written in Python, automatically reads the missions requirements and tries to despatch the required vehicles accordingly.**
 
+**This bot is meant for use with standard Chrome, please do not use any MissionChief mods, such as LSS manager.**
 
 
 ## How to use
@@ -17,8 +18,6 @@ Once you're done, do the following in a cmd - it will run the bot for you.
 
 ## Issues / Bugs / Errors
 
-If you're getting a chrome driver error please make sure you have the correect driver for your version of chrome. 
-
 If you have any issues please create an issue [here](https://github.com/codesidian/Python-MissionChiefBot/issues)
 
 
@@ -30,3 +29,11 @@ If you'd like to contribute please feel free to make a fork, which will then be 
 ## License
 This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License
 see license [here](https://github.com/codesidian/Python-MissionChiefBot/blob/master/LICENSE.md)
+
+## Disclaimer
+Section 7.2 of the MissionChief official rules state:
+`Use of tools, scripts, bots or other computer programs:Users are not allowed to use tools, scripts, bots or other computer programs which are suitable for the automatic execution of actions in a game.`
+
+No developers of this bot hold any responsability for your use of it. We make no warranties about the effectiveness, or performance of this bot. If you're banned, that's on you. 
+
+**use at your own risk**
