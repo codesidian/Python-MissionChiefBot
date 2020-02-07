@@ -2,7 +2,7 @@
 
  **A small bot for the game missionchief written in Python, automatically reads the missions requirements and tries to despatch the required vehicles accordingly.**
 
-**This bot only works with a vanilla / default account, so don't expect it to work with custom callsigns - Just yet.**
+**This bot is meant for use with standard Chrome, please do not use any MissionChief mods, such as LSS manager.**
 
 
 ## How to use
