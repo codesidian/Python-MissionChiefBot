@@ -50,7 +50,7 @@ class MissonChiefBot:
     #Check and remove completed missions
     oldMissions = self.missionList
     for oldMission in oldMissions:
-      browser.visit("https://www.missionchief.co.uk/missions/"+oldMission.getID())
+      browser.visit(BASE_URL + "missions/"+oldMission.getID())
       try:
         if browser.find_by_css('missionNotFound'):
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
@@ -77,7 +77,7 @@ class MissonChiefBot:
           if mission.getID() == missionId:
             #since the mission is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit("https://www.missionchief.co.uk/missions/"+missionId)
+        browser.visit(BASE_URL + "missions/"+missionId)
         missionName = browser.find_by_id('missionH1').text          
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
@@ -104,7 +104,7 @@ class MissonChiefBot:
           if vehicle.getID == vehicleId:
             #since the vehicle is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit("https://www.missionchief.co.uk/vehicles/"+vehicleId)
+        browser.visit(BASE_URL + "vehicles/"+vehicleId)
         vehicleName = browser.find_by_tag('h1').text
         vehicleType = browser.links.find_by_partial_href('/fahrzeugfarbe/').text
         vehicleStatus = browser.find_by_xpath('//span[contains(@class, "building_list_fms")]').text    
@@ -152,7 +152,7 @@ class MissonChiefBot:
 
   def despatchVehicles(self,mission):
     print(f"Going to mission {mission.getName()}")
-    browser.visit("https://www.missionchief.co.uk/missions/"+mission.getID())
+    browser.visit(BASE_URL + "missions/"+mission.getID())
     print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
     for requirement in mission.getRequirements():
