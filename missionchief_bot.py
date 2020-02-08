@@ -180,8 +180,9 @@ class MissonChiefBot:
                     ownedVehicle.setDespatched()
             #we can skip the next categories as this requirement has now been fulfilled
             break
-      except NothingToDespatch:
+      except NothingToDespatch as e:
         print("Nothing to despatch")  
+        print(e)
         continue            
     # If units have been checked, we need to despatch them.
     if(checkedunits==True):

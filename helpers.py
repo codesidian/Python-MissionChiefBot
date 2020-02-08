@@ -1,5 +1,6 @@
 import random
 vehicles = {
+# .co.uk
 "fire engines": {
 "Water Ladder",
 "Light 4X4 Pump (L4P)",
@@ -26,6 +27,13 @@ vehicles = {
 "HazMat Unit",
 "Breathing Apparatus Support Units (BASU)",
 "Incident Command and Control Unit (ICCU)"
+},
+# .com
+"firetrucks": {
+"Type 1 fire engine",
+"Type 2 fire engine",
+"Quint",
+"Rescue Engine"
 }
 
 }
