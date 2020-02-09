@@ -1,2 +1,2 @@
-splinter>=0.11.0
+splinter>=0.13.0
 colorama>=0.4.3
