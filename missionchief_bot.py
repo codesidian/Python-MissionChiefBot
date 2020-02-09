@@ -66,6 +66,7 @@ class MissonChiefBot:
     hrefs = []
     browser.visit(url)
     links = browser.links.find_by_partial_href('/missions/')
+    checked = 0;
     for link in links:
         hrefs.append(link['href'])
     print(f"{str(len(links))} mission/s found")
@@ -82,7 +83,9 @@ class MissonChiefBot:
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
         self.missionList.append(currMission)
-
+        # Show user how many missions it's checked compared to how many it needs to.
+        checked+=1
+        print(Fore.GREEN + f"{checked}/{len(hrefs)} missions checked!" + Fore.RESET)
       except AlreadyExistsException:
         continue
       #time.sleep(5)
@@ -96,6 +99,7 @@ class MissonChiefBot:
     for link in links:
         hrefs.append(link['href'])
     print(f"{str(len(links))} vehicles/s found")
+    checked = 0;
     for href in hrefs:
       vehicleId = href.split("/")[4]
       try:
@@ -109,6 +113,8 @@ class MissonChiefBot:
         vehicleStatus = browser.find_by_xpath('//span[contains(@class, "building_list_fms")]').text    
         currVehicle = Vehicle(vehicleId,vehicleName,vehicleType,vehicleStatus)
         self.vehicleList.append(currVehicle)
+        checked+=1
+        print(Fore.GREEN + f"{checked}/{len(hrefs)} vehicles checked!" + Fore.RESET)
       except AlreadyExistsException:
         continue
       #time.sleep(5)
@@ -130,7 +136,6 @@ class MissonChiefBot:
         if(mission not in self.despatches):
           self.despatchVehicles(mission)
         else:
-          print('we here')
           #We need to make sure that there's no missions with half dispatches (if there weren't enough vehicles to begin with)
           for despatch in self.despatches:
             if despatch == mission:

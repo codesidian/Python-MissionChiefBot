@@ -10,13 +10,20 @@ Download the code, install Python then open up a cmd and type in the following:
 
 `pip install -r requirements.txt`-
 
-Once done open the account.txt and replace corresponding lines with your account information, and url.txt and enter the domain your account is registered such as `https://www.missionchief.co.uk/`
+Once done open the `account.txt` and replace corresponding lines with your account information, and `url.txt` and enter the domain your account is registered such as `https://www.missionchief.co.uk/`
 
 Once you're done, do the following in a cmd - it will run the bot for you.
 `run missionchief_bot.py`
 
 
 ## Issues / Bugs / Errors
+
+If you have any issues and would like to let us know directly, please join our discord.
+<p align="center">
+  <a href="https://discord.gg/DshUEeg">
+    <img src="https://discordapp.com/api/guilds/676191159638425620/widget.png?style=banner2" />
+  </a>
+</p>
 
 If you have any issues please create an issue [here](https://github.com/codesidian/Python-MissionChiefBot/issues)
 
