@@ -7,11 +7,19 @@ vehicles = {
 "Rescue Pump"
 },
 
+# mix of uk and com vehicles
 "police cars": {
+# .co.uk
 "Incident response vehicle (IRV)",
 "Dog Support Unit (DSU)",
 "Armed Response Vehicle (ARV)",
-"Police helicopter"
+"Police helicopter", 
+# .com
+"Patrol car",
+"SWAT Armoured Vehicle",
+"K-9 Unit",
+"Police Motorcycle",
+"SWAT SUV"
 },
 
 "ambulance": {
