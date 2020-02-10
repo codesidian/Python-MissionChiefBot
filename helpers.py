@@ -42,6 +42,11 @@ vehicles = {
 "Type 2 fire engine",
 "Quint",
 "Rescue Engine"
+},
+"пожарные машины": {
+"АЦ-3,0-40",
+"АЦ 2,3-40",
+"ПСА"
 }
 
 }

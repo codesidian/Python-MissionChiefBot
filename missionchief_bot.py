@@ -1,4 +1,4 @@
-from splinter import Browser
+from selenium import webdriver
 import time
 import platform
 import os
@@ -50,7 +50,7 @@ class MissonChiefBot:
     #Check and remove completed missions
     oldMissions = self.missionList
     for oldMission in oldMissions:
-      browser.visit(BASE_URL + "missions/"+oldMission.getID())
+      browser.get(BASE_URL + "missions/"+oldMission.getID())
       try:
         if browser.find_by_css('missionNotFound'):
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
@@ -58,17 +58,17 @@ class MissonChiefBot:
           for v in self.despatches[oldMission.getID()].getVehicles():
             self.vehicleList[v].setStatus(1)
           self.despatches.remove(oldMission)
-      except ElementDoesNotExist:
+      except Exception:
         continue
       
     print("Building New Missions")
     url = BASE_URL
     hrefs = []
-    browser.visit(url)
-    links = browser.links.find_by_partial_href('/missions/')
+    browser.get(url)
+    links = browser.find_elements_by_xpath("//a[contains(@href,'missions')]")
     checked = 0;
     for link in links:
-        hrefs.append(link['href'])
+        hrefs.append(link.get_attribute('href'))
     print(f"{str(len(links))} mission/s found")
     for href in hrefs:
       print(href)
@@ -78,8 +78,8 @@ class MissonChiefBot:
           if mission.getID() == missionId:
             #since the mission is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit(BASE_URL + "missions/"+missionId)
-        missionName = browser.find_by_id('missionH1').text          
+        browser.get(BASE_URL + "missions/"+missionId)
+        missionName = browser.find_element_by_id('missionH1').text          
         requirements = getRequirements(missionId)
         currMission = Mission(missionId,missionName,requirements)
         self.missionList.append(currMission)
@@ -94,10 +94,10 @@ class MissonChiefBot:
   def buildVehicles(self):
     print("Building Vehicles") 
     hrefs = []
-    browser.visit(BASE_URL + "vehicles")
-    links = browser.links.find_by_partial_href('/vehicles/')
+    browser.get(BASE_URL + "vehicles")
+    links = browser.find_elements_by_xpath("//a[contains(@href,'vehicles')]")
     for link in links:
-        hrefs.append(link['href'])
+        hrefs.append(link.get_attribute("href"))
     print(f"{str(len(links))} vehicles/s found")
     checked = 0;
     for href in hrefs:
@@ -107,10 +107,10 @@ class MissonChiefBot:
           if vehicle.getID == vehicleId:
             #since the vehicle is already in the list, we can continue it.
             raise AlreadyExistsException()
-        browser.visit(BASE_URL + "vehicles/"+vehicleId)
-        vehicleName = browser.find_by_tag('h1').text
-        vehicleType = browser.links.find_by_partial_href('/fahrzeugfarbe/').text
-        vehicleStatus = browser.find_by_xpath('//span[contains(@class, "building_list_fms")]').text    
+        browser.get(BASE_URL + "vehicles/"+vehicleId)
+        vehicleName = browser.find_element_by_tag_name('h1').text
+        vehicleType = browser.find_element_by_xpath("//a[contains(@href,'fahrzeugfarbe')]").text
+        vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text    
         currVehicle = Vehicle(vehicleId,vehicleName,vehicleType,vehicleStatus)
         self.vehicleList.append(currVehicle)
         checked+=1
@@ -156,7 +156,7 @@ class MissonChiefBot:
 
   def despatchVehicles(self,mission):
     print(f"Going to mission {mission.getName()}")
-    browser.visit(BASE_URL + "missions/"+mission.getID())
+    browser.get(BASE_URL + "missions/"+mission.getID())
     print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
     for requirement in mission.getRequirements():
@@ -173,11 +173,12 @@ class MissonChiefBot:
                 if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
                   print("We have a " + category + " " + ownedVehicle.getType() + " available")
                   checkid = ownedVehicle.getID()
-                  checkbox=browser.find_by_id('vehicle_checkbox_'+ownedVehicle.getID())    
+                  vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text    
+                  checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
                   # If amount of despatched is less than required.
                   if(des<todes):
                     print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
-                    checkbox.check()
+                    checkbox.click()
                     checkedunits = True            
                     des+=1
                     despatchedVehicles.append(ownedVehicle.getID())   
@@ -190,13 +191,13 @@ class MissonChiefBot:
         continue            
     # If units have been checked, we need to despatch them.
     if(checkedunits==True):
-      browser.find_by_name('commit').click()
+      browser.find_element_by_name('commit').click()
       print(f"{des} units despatched")
       ########################################
       ### Example of getting vehicle arrival time, might be useful information to grab.
       if ownedVehicle.getStatus() == '3':
         time.sleep(5)
-        remaining = browser.find_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
+        remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
         print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
       
       ########################################
@@ -214,17 +215,19 @@ def login(username,password):
     print(Fore.CYAN + "Logging in"+Style.RESET_ALL)
     # Visit URL
     url = BASE_URL+"/users/sign_in"
-    browser.visit(url)
+    browser.get(url)
     # Filling in login information
-    browser.fill("user[email]",username)
-    browser.fill("user[password]",password)
+    user =  browser.find_element_by_id('user_email')
+    passw = browser.find_element_by_id('user_password')
+    user.send_keys(username)
+    passw.send_keys(password)
     # Submitting login
-    browser.find_by_name('commit').click()
+    browser.find_element_by_name('commit').click()
     try : 
      # check we are logged in- by grabbing a random tag only visible on log in.
-     alliance = browser.find_by_id('alliance_li')
-     print("Logged in")
-     if alliance['class']=="dropdown":
+     alliance = browser.find_element_by_id('alliance_li')
+     if alliance.get_attribute('class')=="dropdown":
+      print("Logged in")
       return True
      else:
       return False
@@ -234,10 +237,10 @@ def login(username,password):
 
 def getRequirements(missionId):
   print("Getting requirements")
-  requirementsurl = browser.links.find_by_partial_href('/einsaetze/')[0]['href']
-  browser.visit(requirementsurl)
+  requirementsurl = browser.find_element_by_xpath('//a[contains(@href, "einsaetze")]').get_attribute('href')
+  browser.get(requirementsurl)
   requiredlist = []
-  requirements = browser.find_by_tag('td')
+  requirements = browser.find_elements_by_tag_name('td')
   print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
   for index, r in enumerate(requirements):
     if r.text:
@@ -265,18 +268,7 @@ if not os.path.exists("chromedriver.exe"):
         "\nhttps://chromedriver.chromium.org/downloads")
   raise SystemExit
 
-# Setting up browser
-if operatingsystem == "Windows":
-  executable_path = {'executable_path': path +'/chromedriver.exe'}
-elif operatingsystem == "Linux":
-  executable_path = {'executable_path': path +'/linux/chromedriver'}
-
-elif operatingsystem == "Darwin":
-  executable_path = {'executable_path': path+'/mac/chromedriver'}
-
-
-  
-browser = Browser('chrome', **executable_path)
+browser = webdriver.Chrome()
 
 def begin(): 
  MissonChiefBot()
