@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 import time
 import platform
 import os
@@ -21,14 +22,13 @@ def setup_logger(name, logFile, level=logging.INFO):
     logFile (str): Desired filename to be logged to\n
     level (logging.LEVEL): Level of logging on the logger
   """
-    fHandler = logging.FileHandler(logFile)   
-    formatter = logging.Formatter('%(levelname)s : %(asctime)s : %(funcName)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')     
-    fHandler.setFormatter(formatter)
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(fHandler)
-
-    return logger
+  fHandler = logging.FileHandler(logFile)   
+  formatter = logging.Formatter('%(levelname)s : %(asctime)s : %(funcName)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')     
+  fHandler.setFormatter(formatter)
+  logger = logging.getLogger(name)
+  logger.setLevel(level)
+  logger.addHandler(fHandler)
+  return logger
 
 class AlreadyExistsException(Exception):
     pass
@@ -239,20 +239,28 @@ class MissonChiefBot:
                   logger.debug("User has %s %s available",ownedVehicle.getType(),category)
                   print("We have a " + category + " " + ownedVehicle.getType() + " available")
                   #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
-                  logger.debug("Finding vehicle's checkbox")  
-                  checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
+                  
                   # If amount of despatched is less than required.
                   logger.debug("Checking if there required quantity as been achieved")  
                   if(des<todes):
                     logger.debug("Mission still needs vehicles, despatching.")
                     print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
-                    logger.debug("Clicking checkbox")
-                    checkbox.click()
-                    checkedunits = True            
-                    des+=1
-                    logger.debug("Adding vehicle to despatched list, and setting it as despatched")
-                    despatchedVehicles.append(ownedVehicle.getID())   
-                    ownedVehicle.setDespatched()
+                    try:
+                      logger.debug("Finding vehicle's checkbox")  
+                      checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
+                      
+                      # Scroll the element
+                      browser.execute_script("arguments[0].scrollIntoView();", checkbox)
+
+                      checkbox.click()
+                      checkedunits = True     
+                      des+=1
+                      logger.debug("Adding vehicle to despatched list, and setting it as despatched")
+                      despatchedVehicles.append(ownedVehicle.getID())   
+                      ownedVehicle.setDespatched()       
+                    except NoSuchElementException as e: 
+                      continue
+             
             #we can skip the next categories as this requirement has now been fulfilled
             break
       except NothingToDespatch as e:
