@@ -22,7 +22,7 @@ class MissonChiefBot:
     else: 
      print("Couldn't log in...")
 def login(username,password):
-    print("Logging in")
+    print("logger in")
     # Visit URL
     url = baseurl+"/users/sign_in"
     browser.visit(url)
