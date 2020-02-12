@@ -76,7 +76,7 @@ class MissonChiefBot:
       browser.get(BASE_URL + "missions/"+oldMission.getID())
       try:
         compNum = compNum + 1
-        if browser.find_by_css('missionNotFound'):
+        if browser.find_element_by_class_name('missionNotFound'):
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           self.missionList.remove(oldMission)
@@ -247,11 +247,9 @@ class MissonChiefBot:
                     print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
                     try:
                       logger.debug("Finding vehicle's checkbox")  
-                      checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
-                      
+                      checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')                
                       # Scroll the element
                       browser.execute_script("arguments[0].scrollIntoView();", checkbox)
-
                       checkbox.click()
                       checkedunits = True     
                       des+=1
@@ -259,6 +257,7 @@ class MissonChiefBot:
                       despatchedVehicles.append(ownedVehicle.getID())   
                       ownedVehicle.setDespatched()       
                     except NoSuchElementException as e: 
+                      logger.debug("Vehicle checkbox cannot be found" + ownedVehicle.getID())
                       continue
              
             #we can skip the next categories as this requirement has now been fulfilled
