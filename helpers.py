@@ -7,6 +7,7 @@ vehicles = {
 "Rescue Pump"
 },
 
+
 # mix of uk and com vehicles
 "police cars": {
 # .co.uk
@@ -24,6 +25,10 @@ vehicles = {
 
 "ambulance": {
 "Ambulance"
+},
+
+"fire officers": {
+    "Fire Officer"
 },
 
 "Misc" : {
