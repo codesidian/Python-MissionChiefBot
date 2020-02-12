@@ -281,10 +281,14 @@ class MissonChiefBot:
       ########################################
       ### Example of getting vehicle arrival time, might be useful information to grab.
       if ownedVehicle.getStatus() == '3':
+        # We sleep as it's not immediately available
         time.sleep(5)
-        remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
-        print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
-      
+        try:
+          remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
+          browser.execute_script("arguments[0].scrollIntoView();", remaining)
+          print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
+        except NoSuchElementException as e: 
+          logger.debug("Could not find remaining time element")
       ########################################
       logger.debug("Checking if missions is in our despatches")
       if(mission not in self.despatches):
