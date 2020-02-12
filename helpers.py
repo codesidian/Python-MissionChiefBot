@@ -6,8 +6,16 @@ vehicles = {
 "Light 4X4 Pump (L4P)",
 "Rescue Pump"
 },
+"aerial appliance trucks": {
+"Aerial Appliance"
+},
+"breathing apparatus support units": {
+"BASU"
+},
 
-
+"incident command and control units": {
+"ICCU"
+},
 # mix of uk and com vehicles
 "police cars": {
 # .co.uk
