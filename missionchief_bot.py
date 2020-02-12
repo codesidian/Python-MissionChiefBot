@@ -9,6 +9,7 @@ from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
 import logging
+import configparser
 init()
 
 
@@ -94,6 +95,7 @@ class MissonChiefBot:
     browser.get(url)
     links = browser.find_elements_by_xpath("//a[contains(@href,'missions')]")
     checked = 0
+    missionseen = 0
     for link in links:
         hrefs.append(link.get_attribute('href'))
     print(f"{str(len(links))} mission/s found")
@@ -101,11 +103,13 @@ class MissonChiefBot:
     for href in hrefs:
       print(href)
       missionId = href.split("/")[4]
-      try:
+      if(missionseen<MISSION_BATCH_NUM):
+       try:
         for mission in self.missionList:
           if mission.getID() == missionId:
             #since the mission is already in the list, we can continue it.
             raise AlreadyExistsException()
+        logger.debug("%i/%i missions checked against batch amount",missionseen,MISSION_BATCH_NUM)
         logger.debug("Getting vehicle info for %s", missionId)
         browser.get(BASE_URL + "missions/"+missionId)
         missionName = browser.find_element_by_id('missionH1').text   
@@ -116,10 +120,12 @@ class MissonChiefBot:
         currMission = Mission(missionId,missionName,requirements)
         logger.debug("Mission info built, adding to list")
         self.missionList.append(currMission)
+        missionseen+=1
         # Show user how many missions it's checked compared to how many it needs to.
         checked+=1
-        print(Fore.GREEN + f"{checked}/{len(hrefs)} missions checked!" + Fore.RESET)
-      except AlreadyExistsException:
+        print(Fore.GREEN + f"{checked}/{MISSION_BATCH_NUM} missions checked!" + Fore.RESET)
+       except AlreadyExistsException:
+        missionseen+=1
         continue
     logger.debug("%s/%s missions built",checked,len(hrefs))
 
@@ -369,16 +375,13 @@ def getRequirements(missionId):
 logger = setup_logger('botLogger','debug.log',level=logging.DEBUG)
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
+config = configparser.ConfigParser()
+config.read('config.ini')
+BASE_URL = config['DEFAULT']['url']
+MISSION_BATCH_NUM = int(config['DEFAULT']['mission_batch_amount'])
+username = config['DEFAULT']['email'].strip()
+password = config['DEFAULT']['password'].strip()
 
-# Get URL from file
-with open(path + "/url.txt", 'r') as f:
-    BASE_URL = f.readline().strip()
-
-# Taking account information from file
-with open(path + '/account.txt', 'r') as f:
-    username = f.readline().strip()
-    password = f.readline().strip()
-    
 if not os.path.exists("chromedriver.exe"):
   print("Please make sure chromedriver.exe is in the project folder."+
         "\nGet the correct one for your version of chrome here:"+
