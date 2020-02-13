@@ -86,14 +86,12 @@ class MissonChiefBot:
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           self.missionList.remove(oldMission)
-          print("Maybe error")
           for d in self.despatches:
             if d.getID() == oldMission.getID():
               for dv in d.getVehicles():  
                 for v in self.vehicleList:
                   if dv == v.getID():
                     v.setStatus('1')
-          print("new code")
           tempMissionSeen = self.missionsSeen
           for h in tempMissionSeen:
             if oldMission.getID() in h:
@@ -283,8 +281,8 @@ class MissonChiefBot:
                       logger.debug("Adding vehicle to despatched list, and setting it as despatched")
                       despatchedVehicles.append(ownedVehicle.getID())   
                       ownedVehicle.setDespatched()       
-                    except (NoSuchElementException,ElementClickInterceptedException) as e: 
-                      logger.debug("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
+                    except (NoSuchElementException) as e: 
+                      logger.error("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
                       continue
              
             #we can skip the next categories as this requirement has now been fulfilled
