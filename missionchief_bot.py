@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 import time
 import platform
 import os
@@ -42,6 +42,8 @@ class MissonChiefBot:
     self.missionList = []
     self.vehicleList = []
     self.despatches = []
+    self.missionsSeen = []
+    
     logger.info("Attempting login")
     logged_in = login(username,password)
     if logged_in:
@@ -73,6 +75,9 @@ class MissonChiefBot:
     logger.debug("Removing completed missions")
     oldMissions = self.missionList
     compNum = 0
+    haveVehiclesAvailable = False
+    hrefs = []
+    url = BASE_URL
     for oldMission in oldMissions:
       browser.get(BASE_URL + "missions/"+oldMission.getID())
       try:
@@ -81,53 +86,69 @@ class MissonChiefBot:
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           self.missionList.remove(oldMission)
-          for v in self.despatches[oldMission.getID()].getVehicles():
-            self.vehicleList[v].setStatus(1)
+          print("Maybe error")
+          for d in self.despatches:
+            if d.getID() == oldMission.getID():
+              for dv in d.getVehicles():  
+                for v in self.vehicleList:
+                  if dv == v.getID():
+                    v.setStatus('1')
+          print("new code")
+          tempMissionSeen = self.missionsSeen
+          for h in tempMissionSeen:
+            if oldMission.getID() in h:
+              self.missionsSeen.remove(h) 
           self.despatches.remove(oldMission)
-      except Exception:
+          
+      except NoSuchElementException:
         continue
     logger.debug("%s missions completed",compNum)
     logger.debug("Building missions list")
     print("Building New Missions")
-    url = BASE_URL
-    hrefs = []
     logger.debug("Grabbing mission urls and hrefs")
     browser.get(url)
     links = browser.find_elements_by_xpath("//a[contains(@href,'missions')]")
     checked = 0
-    missionseen = 0
+    currBatchNum = 0
     for link in links:
         hrefs.append(link.get_attribute('href'))
     print(f"{str(len(links))} mission/s found")
     logger.debug("Building info for %s missions", len(hrefs))
-    for href in hrefs:
-      print(href)
-      missionId = href.split("/")[4]
-      if(missionseen<MISSION_BATCH_NUM):
-       try:
-        for mission in self.missionList:
-          if mission.getID() == missionId:
-            #since the mission is already in the list, we can continue it.
-            raise AlreadyExistsException()
-        logger.debug("%i/%i missions checked against batch amount",missionseen,MISSION_BATCH_NUM)
-        logger.debug("Getting vehicle info for %s", missionId)
-        browser.get(BASE_URL + "missions/"+missionId)
-        missionName = browser.find_element_by_id('missionH1').text   
-        logger.debug("Mission name is %s", missionName)    
-        logger.debug("Getting requirements for %s",missionId)   
-        requirements = getRequirements(missionId)
-        logger.debug("Mission requirements are %s", requirements)
-        currMission = Mission(missionId,missionName,requirements)
-        logger.debug("Mission info built, adding to list")
-        self.missionList.append(currMission)
-        missionseen+=1
-        # Show user how many missions it's checked compared to how many it needs to.
-        checked+=1
-        print(Fore.GREEN + f"{checked}/{MISSION_BATCH_NUM} missions checked!" + Fore.RESET)
-       except AlreadyExistsException:
-        missionseen+=1
-        continue
-    logger.debug("%s/%s missions built",checked,len(hrefs))
+    for v in self.vehicleList:
+      if v.despatchable():
+        haveVehiclesAvailable = True
+        break
+      
+    if haveVehiclesAvailable:
+      for href in hrefs:
+        missionId = href.split("/")[4]
+        if(href not in self.missionsSeen and currBatchNum < MISSION_BATCH_NUM):
+          currBatchNum+=1
+          self.missionsSeen.append(href)
+          try:
+            for mission in self.missionList:
+              if mission.getID() == missionId:
+                #since the mission is already in the list, we can continue it.
+                raise AlreadyExistsException()
+            logger.debug("%i/%i missions checked against batch amount",currBatchNum,MISSION_BATCH_NUM)
+            logger.debug("Getting vehicle info for %s", missionId)
+            browser.get(BASE_URL + "missions/"+missionId)
+            missionName = browser.find_element_by_id('missionH1').text   
+            logger.debug("Mission name is %s", missionName)    
+            logger.debug("Getting requirements for %s",missionId)   
+            requirements = getRequirements(missionId)
+            logger.debug("Mission requirements are %s", requirements)
+            currMission = Mission(missionId,missionName,requirements)
+            logger.debug("Mission info built, adding to list")
+            self.missionList.append(currMission)
+            # Show user how many missions it's checked compared to how many it needs to.
+            checked+=1
+            print(Fore.GREEN + f"{checked}/{MISSION_BATCH_NUM} missions checked!" + Fore.RESET)
+          except AlreadyExistsException:
+            continue
+        logger.debug("%s/%s missions built",checked,len(hrefs))
+    else:
+      logging.debug("No vehicles available, not checking missions")
 
 
   def buildVehicles(self):
@@ -243,7 +264,7 @@ class MissonChiefBot:
               for ownedVehicle in self.vehicleList:
                 if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
                   logger.debug("User has %s %s available",ownedVehicle.getType(),category)
-                  print("We have a " + category + " " + ownedVehicle.getType() + " available")
+                  #print("We have a " + category + " " + ownedVehicle.getType() + " available")
                   #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
                   
                   # If amount of despatched is less than required.
@@ -262,8 +283,8 @@ class MissonChiefBot:
                       logger.debug("Adding vehicle to despatched list, and setting it as despatched")
                       despatchedVehicles.append(ownedVehicle.getID())   
                       ownedVehicle.setDespatched()       
-                    except NoSuchElementException as e: 
-                      logger.debug("Vehicle checkbox cannot be found" + ownedVehicle.getID())
+                    except (NoSuchElementException,ElementClickInterceptedException) as e: 
+                      logger.debug("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
                       continue
              
             #we can skip the next categories as this requirement has now been fulfilled
@@ -279,17 +300,17 @@ class MissonChiefBot:
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
       ########################################
-      ### Example of getting vehicle arrival time, might be useful information to grab.
-      if ownedVehicle.getStatus() == '3':
-        # We sleep as it's not immediately available
-        time.sleep(5)
-        try:
-          remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
-          browser.execute_script("arguments[0].scrollIntoView();", remaining)
-          print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
-        except NoSuchElementException as e: 
-          logger.debug("Could not find remaining time element")
-      ########################################
+      # ### Example of getting vehicle arrival time, might be useful information to grab.
+      # if ownedVehicle.getStatus() == '3':
+      #   # We sleep as it's not immediately available
+      #   time.sleep(5)
+      #   try:
+      #     remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
+      #     browser.execute_script("arguments[0].scrollIntoView();", remaining)
+      #     print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
+      #   except NoSuchElementException as e: 
+      #     logger.debug("Could not find remaining time element")
+      # ########################################
       logger.debug("Checking if missions is in our despatches")
       if(mission not in self.despatches):
         logger.debug("Adding it")
