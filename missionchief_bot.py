@@ -1,9 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.common.exceptions import NoSuchElementException
 import time
 import platform
 import os
@@ -69,7 +65,11 @@ class MissonChiefBot:
           break
     else: 
       print("Couldn't log in...")
-     
+  def pageloaded(self): 
+   browser.execute_script('return document.readyState;')
+   return True
+
+
   def buildMissions(self):
     """
       Build a list of current missions and remove completed
@@ -248,7 +248,9 @@ class MissonChiefBot:
     print(f"Going to mission {mission.getName()}")
     logger.debug("Visiting the url")
     browser.get(BASE_URL + "missions/"+mission.getID())
-    print("Checking requirements for " + mission.getName())
+    loaded = self.pageloaded()
+    if loaded:
+      print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
     logger.debug("Going through the requirements")
     for requirement in mission.getRequirements():
@@ -275,31 +277,21 @@ class MissonChiefBot:
                     logger.debug("Mission still needs vehicles, despatching.")
                     print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
                     try:
-                      logger.debug("Finding vehicle's checkbox" + ownedVehicle.getID())  
-                      # Confirm element exists
-                      if browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]'):  
-                        logger.debug("There is a checkbox with the id "+ownedVehicle.getID() )
-                        checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')        
-                        wait = WebDriverWait(browser, 60)
-                        obj = wait.until(EC.presence_of_element_located((By.XPATH, '//input[contains(@id, '+ownedVehicle.getID() +')]')))
-                        # Scroll to the element
-                        browser.execute_script("return arguments[0].scrollIntoView();", checkbox)
-                        logger.debug("Attempting to click " + ownedVehicle.getID())  
-                        try: 
-                          checkbox.click()
-                          logger.debug(ownedVehicle.getID() + " was clicked")  
-                          checkedunits = True     
-                          des+=1
-                          logger.debug("Adding vehicle to despatched list, and setting it as despatched")
-                          despatchedVehicles.append(ownedVehicle.getID())   
-                          ownedVehicle.setDespatched()       
-                        except ElementClickInterceptedException as e:
-                          # Throws if it cant click the checkbox, as element is covering etc. Just continue.
-                          logger.debug(ownedVehicle.getID() + " was not clicked error ")  
-                          continue
-                      else:
-                       logger.debug(ownedVehicle.getID() + " could not find checkbox at all- skipping ")  
-                       continue
+                      logger.debug("Finding vehicle checkboxes on page" + ownedVehicle.getID())  
+                      checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
+                      # Check the checkboxes against our vehicle, see if the checkbox is available.
+                      for checkbox in checkboxes:
+                       if checkbox.get_attribute('value') == ownedVehicle.getID():
+                        logger.debug("There is a checkbox with the id "+ownedVehicle.getID() )             
+                        # Scroll the element
+                        checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
+                        browser.execute_script("arguments[0].scrollIntoView();", checkbox)
+                        checkbox.click()
+                        checkedunits = True     
+                        des+=1
+                        logger.debug("Adding vehicle to despatched list, and setting it as despatched")
+                        despatchedVehicles.append(ownedVehicle.getID())   
+                        ownedVehicle.setDespatched()       
                     except (NoSuchElementException) as e: 
                       logger.error("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
                       continue
@@ -382,6 +374,8 @@ def login(username,password):
      return False
 
 
+
+
 def getRequirements(missionId):
   """
     Returns a list of requirements given a missionId\n
@@ -413,6 +407,8 @@ def getRequirements(missionId):
 
   return requiredlist
 
+  
+
 
 logger = setup_logger('botLogger','debug.log',level=logging.DEBUG)
 operatingsystem = platform.system()
@@ -432,6 +428,9 @@ if not os.path.exists("chromedriver.exe"):
 
 browser = webdriver.Chrome()
 
+
+
+  
 def begin(): 
  MissonChiefBot()
 
