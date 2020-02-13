@@ -10,10 +10,11 @@ Download the code, install Python then open up a cmd and type in the following:
 
 `pip install -r requirements.txt`-
 
-Once done open the `account.txt` and replace corresponding lines with your account information, and `url.txt` and enter the domain your account is registered such as `https://www.missionchief.co.uk/`
+Once done open the `config.ini` and replace corresponding `email` and `password` with your account information, and `url` with the domain your account is registered on such as `https://www.missionchief.co.uk/`. 
+`mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
 
-Once you're done, do the following in a cmd - it will run the bot for you.
-`run missionchief_bot.py`
+Once you're done, do the following in a cmd inside the project - it will run the bot for you.
+`py missionchief_bot.py`
 
 
 ## Issues / Bugs / Errors

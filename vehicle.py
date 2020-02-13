@@ -26,12 +26,9 @@ class Vehicle:
             return True
         else:
             return False
-    def setDespatched(self):
-        try:
-            self.setStatus('3')
-            return True
-        except Exception as e:
-            return False
+    def setDespatched(self): 
+        self.setStatus('3')
+        return True
 
     def __eq__(self, other):
         return self.ID == other.ID
