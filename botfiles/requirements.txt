@@ -1,0 +1,3 @@
+selenium>=3.141.0
+colorama>=0.4.3
+chromedriver-autoinstaller>=0.2.0

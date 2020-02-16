@@ -1,0 +1,44 @@
+{
+    "missions": {
+        "8272899": {
+            "missionName": "CONTAINER FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8273041": {
+            "missionName": "KITCHEN FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"2\"\n    }\n]"
+        },
+        "8273499": {
+            "missionName": "POSTBOX ON FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8273579": {
+            "missionName": "ROOM FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"2\"\n    }\n]"
+        },
+        "8274059": {
+            "missionName": "BALE OF STRAW FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8275157": {
+            "missionName": "LITTLE FIELD FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"2\"\n    }\n]"
+        },
+        "8275188": {
+            "missionName": "BALE OF STRAW FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8275222": {
+            "missionName": "BURNING TRAILER",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8275609": {
+            "missionName": "BALE OF STRAW FIRE",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        },
+        "8276544": {
+            "missionName": "TREE ON THE ROAD",
+            "requirements": "[\n    {\n        \"requirement\": \"fire engines\",\n        \"qty\": \"1\"\n    }\n]"
+        }
+    }
+}
