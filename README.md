@@ -6,15 +6,22 @@
 
 
 ## How to use
-Download the code, install Python then open up a cmd and type in the following:
-
-`pip install -r requirements.txt`-
+Download the code, and install Python then extract the files to a folder
 
 Once done open the `config.ini` and replace corresponding `email` and `password` with your account information, and `url` with the domain your account is registered on such as `https://www.missionchief.co.uk/`. 
 `mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
 
-Once you're done, do the following in a cmd inside the project - it will run the bot for you.
-`py missionchief_bot.py`
+### Windows
+Once you're done double click the `run.bat` located in the mail folder. This will force check any requirements and run the script for you. 
+
+### Linux
+ `cd` into the botfiles folder, and run either `python missionchief_bot.py` or `py missionchief_bot.py` depending on your python version
+ 
+ ### Mac
+ `cd` into the botfiles folder, and run either `python missionchief_bot.py` or `py missionchief_bot.py` depending on your python version
+
+
+
 
 
 ## Issues / Bugs / Errors
@@ -44,4 +51,4 @@ Section 7.2 of the MissionChief official rules state:
 
 No developers of this bot hold any responsability for your use of it. We make no warranties about the effectiveness, or performance of this bot. If you're banned, that's on you. 
 
-**use at your own risk**
+**USE AT YOUR OWN RISK**
