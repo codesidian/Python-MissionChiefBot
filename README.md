@@ -12,7 +12,7 @@ Once done open the `config.ini` and replace corresponding `email` and `password`
 `mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
 
 ### Windows
-Once you're done double click the `run.bat` located in the mail folder. This will force check any requirements and run the script for you. 
+Once you're done double click the `run.bat` located in the main folder. This will force check any requirements and run the script for you. 
 
 ### Linux
  `cd` into the botfiles folder, and run either `python missionchief_bot.py` or `py missionchief_bot.py` depending on your python version
