@@ -1,15 +1,15 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-import time
-import platform
-import os
+import time,platform,os,sys,logging,configparser
 from helpers import vehicles,randomint
 from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
-import logging
-import configparser
+import chromedriver_autoinstaller
+
+
+
 init()
 
 
@@ -86,7 +86,7 @@ class MissonChiefBot:
       browser.get(BASE_URL + "missions/"+oldMission.getID())
       try:
         compNum = compNum + 1
-        if browser.find_element_by_class_name('missionNotFound'):
+        if browser.find_element_by_xpath("//div[contains(@class,'missionNotFound')]"):
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           self.missionList.remove(oldMission)
@@ -176,9 +176,9 @@ class MissonChiefBot:
             raise AlreadyExistsException()
         logger.debug("Getting vehicle info for %s", vehicleId)
         browser.get(BASE_URL + "vehicles/"+vehicleId)
-        vehicleName = browser.find_element_by_tag_name('h1').text
+        vehicleName = browser.find_element_by_tag_name('h1').text.lower()
         logger.debug("Vehicle name is %s", vehicleName)
-        vehicleType = browser.find_element_by_xpath("//a[contains(@href,'fahrzeugfarbe')]").text
+        vehicleType = browser.find_element_by_xpath("//a[contains(@href,'fahrzeugfarbe')]").text.lower()
         logger.debug("Vehicle type is %s", vehicleType)
         vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text
         logger.debug("Vehicle type is %s", vehicleStatus)
@@ -262,9 +262,10 @@ class MissonChiefBot:
       try: 
         for category in vehicles:
           #Only need to check for required types
-          if requirement['requirement'] == category:
+          if requirement['requirement'] == category.lower():
             print("Mission needs "+str(todes)+" " + category)
             for vehicle in vehicles[category]:
+              vehicle = vehicle.lower()
               for ownedVehicle in self.vehicleList:
                 if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
                   logger.debug("User has %s %s available",ownedVehicle.getType(),category)
@@ -401,8 +402,8 @@ def getRequirements(missionId):
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
   print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-  logger.warning("No requirements were found, appending 1 ambulance?")
   if(len(requiredlist)==0):
+   logger.warning("No requirements were found, appending 1 ambulance?")
    requiredlist.append({'requirement':'ambulance','qty': 1 })
 
   return requiredlist
@@ -420,11 +421,8 @@ MISSION_BATCH_NUM = int(config['DEFAULT']['mission_batch_amount'])
 username = config['DEFAULT']['email'].strip()
 password = config['DEFAULT']['password'].strip()
 
-if not os.path.exists("chromedriver.exe"):
-  print("Please make sure chromedriver.exe is in the project folder."+
-        "\nGet the correct one for your version of chrome here:"+
-        "\nhttps://chromedriver.chromium.org/downloads")
-  raise SystemExit
+# Check and install chrome driver to path depending on the os.
+chromedriver_autoinstaller.install() 
 
 browser = webdriver.Chrome()
 
@@ -435,5 +433,12 @@ def begin():
  MissonChiefBot()
 
 if __name__ == '__main__':
- begin()
- 
+ try:
+      begin()
+ except KeyboardInterrupt:
+  print('Closing..')
+  logger.debug("Closing bot.")
+  try:
+   sys.exit(1)
+  except SystemExit:
+   os._exit(1)
