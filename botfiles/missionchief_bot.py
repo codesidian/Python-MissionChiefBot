@@ -245,7 +245,7 @@ class MissonChiefBot:
       logger.info("Doing missions")
       for mission in self.missionList:
         print("Checking if "+ mission.getName()+" has units responding")
-        logger.debug("Checking if %s has already been dispatched", mission.getName())
+        logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
         if(mission not in self.despatches):
           logger.debug("It hasn't, despatching.")
           self.despatchVehicles(mission)
@@ -278,7 +278,7 @@ class MissonChiefBot:
       Despatch vehicles based on the passed mission's requirements \n
       Mission (MissionObj): The mission to be despatched
     """
-    logger.info("Dispatching vehicles to %s",mission.getName())
+    logger.info("Dispatching vehicles to %s",mission.getName().encode("UTF-8"))
     print(f"Going to mission {mission.getName()}")
     logger.debug("Visiting the url")
     browser.get(BASE_URL + "missions/"+mission.getID())
@@ -289,7 +289,7 @@ class MissonChiefBot:
     logger.debug("Going through the requirements")
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
-      logger.debug("%s %s are needed",todes,requirement['requirement'])
+      logger.debug("%s %s are needed",todes,requirement['requirement'].encode("UTF-8"))
       des = 0
       checkedunits = False
       logger.debug("Going through the requirements and the user's vehicles to dispatch")
@@ -302,7 +302,7 @@ class MissonChiefBot:
               vehicle = vehicle.lower()
               for ownedVehicle in self.vehicleList:
                 if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
-                  logger.debug("User has %s %s available",ownedVehicle.getType(),category)
+                  logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
                   #print("We have a " + category + " " + ownedVehicle.getType() + " available")
                   #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
                   
@@ -429,9 +429,9 @@ def getRequirements(missionId):
   logger.debug("Looping through the table to extract each vehicle")
   for index, r in enumerate(requirements):
     if r.text:
-     if "Required" in r.text:
+     if "Required" in r.text or "Требуемые" in r.text:
       if "Station" not in r.text:
-       requirement = r.text.replace('Required','').strip().lower()
+       requirement = r.text.replace('Required','').replace('Требуемые','').strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })

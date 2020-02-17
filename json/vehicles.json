@@ -1,24 +1,3 @@
 {
-    "vehicles": {
-        "205706": {
-            "vehicleName": "water ladder",
-            "vehicleStatus": "4",
-            "vehicleType": "water ladder"
-        },
-        "206680": {
-            "vehicleName": "1212",
-            "vehicleStatus": "1",
-            "vehicleType": "light 4x4 pump (l4p)"
-        },
-        "208844": {
-            "vehicleName": "water ladder",
-            "vehicleStatus": "2",
-            "vehicleType": "water ladder"
-        },
-        "208845": {
-            "vehicleName": "test truck (water pump 4x4 (l4p))",
-            "vehicleStatus": "2",
-            "vehicleType": "light 4x4 pump (l4p)"
-        }
-    }
+    "vehicles": {}
 }
