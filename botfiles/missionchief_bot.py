@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 import time,platform,os,sys,logging,configparser,json
 from helpers import vehicles,randomint
 from colorama import init,Fore,Style
@@ -97,6 +98,7 @@ class MissonChiefBot:
                   if dv == v.getID():
                     v.setStatus('1')
           tempMissionSeen = self.missionsSeen
+
           for h in tempMissionSeen:
             if oldMission.getID() in h:
               self.missionsSeen.remove(h) 
@@ -458,7 +460,10 @@ password = config['DEFAULT']['password'].strip()
 # Check and install chrome driver to path depending on the os.
 chromedriver_autoinstaller.install() 
 
-browser = webdriver.Chrome()
+chrome_options = Options()  
+if config['DEFAULT'].getboolean('headless_mode') == True:
+  chrome_options.add_argument("--headless")  
+browser = webdriver.Chrome(options=chrome_options)
 
 
 
