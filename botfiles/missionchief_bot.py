@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
 import time,platform,os,sys,logging,configparser,json
 from helpers import vehicles,randomint
@@ -243,10 +243,8 @@ class MissonChiefBot:
         print("Name: "+ vehicle.getName()+ " | Type: " +vehicle.getType()) 
     print(Fore.MAGENTA + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     if not JUST_BUILD_DATA:
-      print("Doing missions")
       logger.info("Doing missions")
       for mission in self.missionList:
-        print("Checking if "+ mission.getName()+" has units responding")
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
         if(mission not in self.despatches):
           logger.debug("It hasn't, despatching.")
@@ -289,6 +287,13 @@ class MissonChiefBot:
       print("Checking requirements for " + mission.getName())
     despatchedVehicles = []
     logger.debug("Going through the requirements")
+    try:
+      logger.debug("Checking if there's a missing vehicles button")
+      if browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]"):
+        logger.debug("Clicking missing vehicles button")
+        browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]").click()
+    except NoSuchElementException as e:
+      logger.debug("Could not find missing vehicles")
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
       logger.debug("%s %s are needed",todes,requirement['requirement'].encode("UTF-8"))
@@ -302,26 +307,26 @@ class MissonChiefBot:
             print("Mission needs "+str(todes)+" " + category)
             for vehicle in vehicles[category]:
               vehicle = vehicle.lower()
-              for ownedVehicle in self.vehicleList:
-                if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
-                  logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
-                  #print("We have a " + category + " " + ownedVehicle.getType() + " available")
-                  #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
-                  
-                  # If amount of despatched is less than required.
-                  logger.debug("Checking if there required quantity as been achieved")  
+              try:
+                checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
+                # Check the checkboxes against our vehicle, see if the checkbox is available.
+                for checkbox in checkboxes:
                   if(des<todes):
-                    logger.debug("Mission still needs vehicles, despatching.")
-                    print("Despatching " + ownedVehicle.getName() + " to " + mission.getName())
-                    try:
-                      logger.debug("Finding vehicle checkboxes on page" + ownedVehicle.getID())  
-                      checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
-                      # Check the checkboxes against our vehicle, see if the checkbox is available.
-                      for checkbox in checkboxes:
-                       if checkbox.get_attribute('value') == ownedVehicle.getID():
+                   logger.debug("Mission still needs vehicles, despatching.")
+                  #   For each vehicle in our available list
+                   for ownedVehicle in self.vehicleList:
+                    #  Check the type is what we need, and available for despatch
+                    if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
+                      logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
+                      #print("We have a " + category + " " + ownedVehicle.getType() + " available")
+                      #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
+                      
+                      # If amount of despatched is less than required.
+                      logger.debug("Checking if there required quantity as been achieved")  
+          
+                        # If the checkbox ID is that for the vehicle, scroll to and click.
+                      if checkbox.get_attribute('value') == ownedVehicle.getID():
                         logger.debug("There is a checkbox with the id "+ownedVehicle.getID() )             
-                        # Scroll the element
-                        checkbox = browser.find_element_by_xpath('//input[contains(@id, '+ownedVehicle.getID() +')]')
                         browser.execute_script("arguments[0].scrollIntoView();", checkbox)
                         checkbox.click()
                         checkedunits = True     
@@ -329,9 +334,9 @@ class MissonChiefBot:
                         logger.debug("Adding vehicle to despatched list, and setting it as despatched")
                         despatchedVehicles.append(ownedVehicle.getID())   
                         ownedVehicle.setDespatched()       
-                    except (NoSuchElementException) as e: 
-                      logger.error("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
-                      continue
+              except (NoSuchElementException, ElementClickInterceptedException) as e: 
+                logger.error("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
+                continue
              
             #we can skip the next categories as this requirement has now been fulfilled
             break
