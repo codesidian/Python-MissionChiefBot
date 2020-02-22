@@ -90,7 +90,11 @@ class MissonChiefBot:
         if browser.find_element_by_xpath("//div[contains(@class,'missionNotFound')]"):
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
-          self.missionList.remove(oldMission)
+          try:
+           self.missionList.remove(oldMission)
+          except Exception as e:
+           logger.debug("Caught .remove error, continuing.")
+           continue
           for d in self.despatches:
             if d.getID() == oldMission.getID():
               for dv in d.getVehicles():  
@@ -146,7 +150,7 @@ class MissonChiefBot:
                logger.debug("%i/%i missions checked against batch amount",currBatchNum,MISSION_BATCH_NUM)
                logger.debug("Getting vehicle info for %s", missionId)
                browser.get(BASE_URL + "missions/"+missionId)
-               missionName = browser.find_element_by_id('missionH1').text   
+               missionName = browser.find_element_by_id('missionH1').text 
                logger.debug("Mission name is %s", missionName)    
                logger.debug("Getting requirements for %s",missionId)   
                requirements = getRequirements(missionId)
@@ -215,7 +219,8 @@ class MissonChiefBot:
               vdata['vehicles'][vehicleId] = {}
               vdata['vehicles'][vehicleId]['vehicleName'] = vehicleName
               vdata['vehicles'][vehicleId]['vehicleType'] = vehicleType
-              vdata['vehicles'][vehicleId]['vehicleStatus'] = vehicleStatus
+              # Always save the status as 1, otherwise if it not despatchable upon save, it never will be.
+              vdata['vehicles'][vehicleId]['vehicleStatus'] = "1"
               logger.debug("Adding vehicle to JSON file")
               json.dump(vdata,outfile,sort_keys=True,indent=4)
 
@@ -292,7 +297,7 @@ class MissonChiefBot:
       if browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]"):
         logger.debug("Clicking missing vehicles button")
         browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]").click()
-    except NoSuchElementException as e:
+    except (NoSuchElementException,ElementClickInterceptedException) as e:
       logger.debug("Could not find missing vehicles")
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
