@@ -28,10 +28,11 @@ If you don't want to see the browser window set `headless_mode` to `true`
 Once you're done double click the `run.bat` located in the main folder. This will force check any requirements and run the script for you. 
 
 ### Linux
- `cd` into the botfiles folder, download the requirements with `pip install -r requirements.txt` and run either `python missionchief_bot.py` or `py missionchief_bot.py` depending on your python version
+ cd into the bots directory and run `bat run.sh`. This will force check any requirements and run the script for you. Ensure python is installed.
  
  ### Mac
- `cd` into the botfiles folder, download the requirements with `pip install -r requirements.txt` and run either `python missionchief_bot.py` or `py missionchief_bot.py` depending on your python version
+ cd into the bots directory and run `bat run.sh`. This will force check any requirements and run the script for you. Ensure python is installed.
+
 
 
 ## Issues / Bugs / Errors
