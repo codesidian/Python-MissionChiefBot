@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
-import time,platform,os,sys,logging,configparser,json
-from helpers import vehicles,randomint
+import platform,os,sys,logging,configparser,json
+from helpers import randomsleep
 from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
@@ -103,11 +103,14 @@ class MissonChiefBot:
                     v.setStatus('1')
           tempMissionSeen = self.missionsSeen
 
-          for h in tempMissionSeen:
-            if oldMission.getID() in h:
-              self.missionsSeen.remove(h) 
-          self.despatches.remove(oldMission)
-          
+          try:
+            for h in tempMissionSeen:
+              if oldMission.getID() in h:
+                self.missionsSeen.remove(h) 
+            self.despatches.remove(oldMission)
+          except Exception as e:
+           logger.debug("Caught .remove error, continuing.")
+           continue
       except NoSuchElementException:
         continue
     logger.debug("%s missions completed",compNum)
@@ -276,7 +279,7 @@ class MissonChiefBot:
       logger.warning("Bot in build only mode. Not doing missions.")
           
     #  Sleep after mission set.
-    sleep()
+    randomsleep()
 
   def despatchVehicles(self,mission):
     """
@@ -386,10 +389,6 @@ class MissonChiefBot:
     with open("./debug/debug.log", "a") as log:
       log.write("")
       
-def sleep():
-    print(Fore.CYAN + f"Sleeping for {str(15)} seconds"+Style.RESET_ALL)
-    time.sleep(15)
-   
 def login(username,password):
     print(Fore.CYAN + "logging in"+Style.RESET_ALL)
     # Visit URL
@@ -475,6 +474,9 @@ if config['DEFAULT'].getboolean('headless_mode') == True:
   chrome_options.add_argument("--headless")  
 browser = webdriver.Chrome(options=chrome_options)
 
+  # Load vehicles from our json file.
+with open('../json/requirementlink.json',encoding="utf8") as reqlink:
+  vehicles = json.load(reqlink)
 
 
   
