@@ -153,7 +153,10 @@ class MissonChiefBot:
                logger.debug("%i/%i missions checked against batch amount",currBatchNum,MISSION_BATCH_NUM)
                logger.debug("Getting vehicle info for %s", missionId)
                browser.get(BASE_URL + "missions/"+missionId)
-               missionName = browser.find_element_by_id('missionH1').text 
+               try:
+                missionName = browser.find_element_by_id('missionH1').text 
+               except Exception as e:
+                continue
                logger.debug("Mission name is %s", missionName)    
                logger.debug("Getting requirements for %s",missionId)   
                requirements = getRequirements(missionId)
@@ -440,9 +443,8 @@ def getRequirements(missionId):
   logger.debug("Looping through the table to extract each vehicle")
   for index, r in enumerate(requirements):
     if r.text:
-     if "Required" in r.text or "Требуемые" in r.text:
-      if "Station" not in r.text:
-       requirement = r.text.replace('Required','').replace('Требуемые','').strip().lower()
+     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text:
+       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
