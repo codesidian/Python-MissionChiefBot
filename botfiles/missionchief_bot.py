@@ -444,6 +444,7 @@ def getRequirements(missionId):
   for index, r in enumerate(requirements):
     if r.text:
      if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text:
+      if "Station" not in r.text:
        requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
