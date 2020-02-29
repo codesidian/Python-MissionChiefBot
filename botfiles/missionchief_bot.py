@@ -8,6 +8,7 @@ from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
 import chromedriver_autoinstaller
+import time
 
 
 
@@ -282,7 +283,7 @@ class MissonChiefBot:
       logger.warning("Bot in build only mode. Not doing missions.")
           
     #  Sleep after mission set.
-    randomsleep()
+    time.sleep(0.5)
 
   def despatchVehicles(self,mission):
     """
