@@ -1,4 +1,8 @@
 {
+			"släckbilar": [
+			"BAS 1 - Släckbil",
+			"BAS 2 - Släckbil"
+			],
             "fire engines": [
             "Water Ladder",
             "Light 4X4 Pump (L4P)",
@@ -27,7 +31,8 @@
             ],
             
             "ambulance": [
-            "Ambulance"
+            "Ambulance",
+			"Ambulans"
             ],
             
             "fire officers": [
