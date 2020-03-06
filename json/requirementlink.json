@@ -27,7 +27,8 @@
             ],
             
             "ambulance": [
-            "Ambulance"
+            "Ambulance",
+            "Ambulans"
             ],
             
             "fire officers": [
@@ -54,5 +55,10 @@
             "АЦ-3,0-40",
             "АЦ 2,3-40",
             "ПСА"
+        ],
+           "släckbilar": [
+	   "BAS 1 - Släckbil",
+	   "BAS 2 - Släckbil"
         ]
+            
 }

@@ -443,9 +443,9 @@ def getRequirements(missionId):
   logger.debug("Looping through the table to extract each vehicle")
   for index, r in enumerate(requirements):
     if r.text:
-     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text:
+     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text:
       if "Station" not in r.text:
-       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').strip().lower()
+       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
