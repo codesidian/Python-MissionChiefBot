@@ -20,7 +20,7 @@ A small bot for the game missionchief written in Python
 ## How to use
 Download the code [here](https://github.com/codesidian/Python-MissionChiefBot/archive/master.zip), make sure you install Python from [here](https://www.python.org/downloads/) then extract the files to a folder of your choice (Just keep the files together)
 
-Once done open the `config.ini` and replace corresponding `email` and `password` with your account information, and `url` with the domain your account is registered on such as `https://www.missionchief.co.uk/`. 
+Once done open the `config.ini` and replace corresponding `email` and `password` with your account information, and `server` with the country  your account is registered on such as `uk`. All working countries will be in the `server.ini`
 `mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
 If you don't want to see the browser window set `headless_mode` to `true`
 
