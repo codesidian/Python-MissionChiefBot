@@ -1,23 +1,19 @@
 {
-			"släckbilar": [
-			"BAS 1 - Släckbil",
-			"BAS 2 - Släckbil"
-			],
             "fire engines": [
             "Water Ladder",
             "Light 4X4 Pump (L4P)",
             "Rescue Pump"
-            ],
+        ],
             "aerial appliance trucks": [
             "Aerial Appliance"
-            ],
+        ],
             "breathing apparatus support units": [
             "BASU"
-             ],
+        ],
             
             "incident command and control units": [
             "ICCU"
-            ],
+        ],
             "police cars": [
             "Incident response vehicle (IRV)",
             "Dog Support Unit (DSU)",
@@ -28,16 +24,16 @@
             "K-9 Unit",
             "Police Motorcycle",
             "SWAT SUV"
-            ],
-            
+        ],
             "ambulance": [
             "Ambulance",
-			"Ambulans"
-            ],
+			"Ambulans",
+			"Ambulanza BLSD"
+        ],
             
             "fire officers": [
-                "Fire Officer"
-            ],
+            "Fire Officer"
+        ],
             
             "Misc" : [
             "Aerial Appliance",
@@ -48,16 +44,114 @@
             "HazMat Unit",
             "Breathing Apparatus Support Units (BASU)",
             "Incident Command and Control Unit (ICCU)"
-        ],
+		],
             "firetrucks": [
             "Type 1 fire engine",
             "Type 2 fire engine",
             "Quint",
             "Rescue Engine"
-            ],
+        ],
             "пожарные машины": [
             "АЦ-3,0-40",
             "АЦ 2,3-40",
             "ПСА"
-        ]
+        ],
+	
+			"släckbilar": [
+			"BAS 1 - Släckbil",
+			"BAS 2 - Släckbil",
+			"Räddningsbil"
+        ],
+			"stegbilar": [
+			"Stegbil"
+        ],
+            "tankbilar": [
+			"Tankbil"
+        ],
+			"brandchefsbilar": [
+			"Befälsfordon"
+        ],
+			"polisbilar": [
+			"Radiobil"
+        ],
+			"ledningsfordon": [
+			"Räddningsledning"
+        ],
+			"lastväxlare": [
+			"Lastväxlare",
+			"Räddningsbil"
+        ],
+			"fordon med luftapparater": [
+			"Luftfordon"
+        ],
+			"farligt gods-fordon": [
+			"Kemskyddsenhet"
+        ],
+			"APS/ABP": [
+			"ABP",
+			"APS"
+		],
+			"Unità polisoccorso": [
+			"APS",
+			"CA/POLI"
+		],
+			"Autoscale": [
+			"AS"
+		],
+			"Funzionari": [
+			"AV/FNZ"
+		],
+			"Autogrù": [
+			"Autogrù"
+		],
+			"Kilolitrica": [
+			"KILO"
+		],
+			"UCL": [
+			"UCL"
+		],
+			"Carro aria": [
+			"AF/ARIA"
+		],
+			"Pattuglie": [
+			"Volante"
+		],
+			"Löschfahrzeuge": [
+			"LF 10",
+			"LF 20"
+		],
+			"Rüstwagen": [
+			""
+		],
+			"Feuerwehrkräne (FwK)": [
+			""
+		],
+			"GW L 2 Wasser": [
+			""
+		],
+			"GKW": [
+			""
+		],
+			"MzKW": [
+			""
+		],
+			"MTW-TZ": [
+			""
+		],
+			"Boote": [
+			""
+		],
+			"GW-Taucher": [
+			""
+		],
+			"Streifenwagen": [
+			""
+		],
+			"ELW 1": [
+			""
+		],
+			"ELW 2": [
+			""
+		]
+
 }

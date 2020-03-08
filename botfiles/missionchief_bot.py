@@ -238,7 +238,7 @@ class MissonChiefBot:
         continue
     logger.debug("%s/%s vehicles built",checked,len(hrefs))
 
-      
+
   def doMissions(self):
     """
       Rebuild the mission list, check for partial despatches and despatch. 
@@ -393,6 +393,10 @@ class MissonChiefBot:
       log.write("")
       
 def login(username,password):
+    print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+    print("Connecting to the region: ", SERVER_REGION ) 
+    print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+
     print(Fore.CYAN + "logging in"+Style.RESET_ALL)
     # Visit URL
     url = BASE_URL+"/users/sign_in"
@@ -443,9 +447,9 @@ def getRequirements(missionId):
   logger.debug("Looping through the table to extract each vehicle")
   for index, r in enumerate(requirements):
     if r.text:
-     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text:
-      if "Station" not in r.text:
-       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").strip().lower()
+     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
+      if "Station" not in r.text or "Caserme" not in r.text or "Stazioni" not in r.text:
+       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
        requiredlist.append({'requirement':requirement,'qty': qty })
@@ -464,10 +468,18 @@ operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.ConfigParser()
 config.read('../config.ini')
-BASE_URL = config['DEFAULT']['url']
+#BASE_URL = config['DEFAULT']['url']
+SERVER = config['DEFAULT']['server']
 MISSION_BATCH_NUM = int(config['DEFAULT']['mission_batch_amount'])
 username = config['DEFAULT']['email'].strip()
 password = config['DEFAULT']['password'].strip()
+#print("Selected server ", SERVER)
+
+servers = configparser.ConfigParser()
+servers.read('../server.ini')
+BASE_URL = servers[SERVER]['url']
+SERVER_REGION = servers[SERVER]['name']
+
 
 # Check and install chrome driver to path depending on the os.
 chromedriver_autoinstaller.install() 
@@ -480,7 +492,6 @@ browser = webdriver.Chrome(options=chrome_options)
   # Load vehicles from our json file.
 with open('../json/requirementlink.json',encoding="utf8") as reqlink:
   vehicles = json.load(reqlink)
-
 
   
 def begin(): 
