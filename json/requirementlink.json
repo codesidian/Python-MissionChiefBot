@@ -30,7 +30,6 @@
 			"Ambulans",
 			"Ambulanza BLSD"
         ],
-            
             "fire officers": [
             "Fire Officer"
         ],
@@ -56,7 +55,6 @@
             "АЦ 2,3-40",
             "ПСА"
         ],
-	
 			"släckbilar": [
 			"BAS 1 - Släckbil",
 			"BAS 2 - Släckbil",
@@ -153,5 +151,4 @@
 			"ELW 2": [
 			""
 		]
-
 }
