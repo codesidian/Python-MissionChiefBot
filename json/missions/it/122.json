@@ -1,0 +1,10 @@
+{
+"missionID": "122",
+"missionTitle":"Incendio mensa scolastica",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "1",
+"Ambulanza": "8",
+"comment":"end"
+}
+}

@@ -1,0 +1,9 @@
+{
+"missionID": "35",
+"missionTitle":"Alcoholic intoxication",
+"missionRequirements": {
+"Police Cars": "1",
+"Ambulance": "1",
+"comment":"end"
+}
+}

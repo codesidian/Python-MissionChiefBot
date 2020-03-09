@@ -1,0 +1,8 @@
+{
+"missionID": "37",
+"missionTitle":"Acute asthma",
+"missionRequirements": {
+"Ambulance": "1",
+"comment":"end"
+}
+}

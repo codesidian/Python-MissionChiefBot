@@ -1,0 +1,10 @@
+{
+"missionID": "22",
+"missionTitle":"Roof fire",
+"missionRequirements": {
+"Aerial Appliance Trucks": "1",
+"Fire engines": "3",
+"Fire Officers": "1",
+"comment":"end"
+}
+}

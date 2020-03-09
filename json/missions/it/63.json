@@ -1,0 +1,8 @@
+{
+"missionID": "63",
+"missionTitle":"Attacco ischemico transitorio",
+"missionRequirements": {
+"Ambulanza": "1",
+"comment":"end"
+}
+}

@@ -1,0 +1,8 @@
+{
+"missionID": "42",
+"missionTitle":"Caduta accidentale",
+"missionRequirements": {
+"Ambulanza": "1",
+"comment":"end"
+}
+}

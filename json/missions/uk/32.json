@@ -1,0 +1,8 @@
+{
+"missionID": "32",
+"missionTitle":"Harvester fire",
+"missionRequirements": {
+"Fire engines": "2",
+"comment":"end"
+}
+}

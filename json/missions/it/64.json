@@ -1,0 +1,10 @@
+{
+"missionID": "64",
+"missionTitle":"Incidente con autobus coinvolto",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "1",
+"Ambulanza": "12",
+"comment":"end"
+}
+}

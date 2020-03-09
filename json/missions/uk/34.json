@@ -1,0 +1,13 @@
+{
+"missionID": "34",
+"missionTitle":"Fire in Hospital",
+"missionRequirements": {
+"Fire engines": "10",
+"Fire Officers": "2",
+"Rescue Support Vehicles": "2",
+"Water Carriers": "1",
+"Aerial Appliance Trucks": "3",
+"Ambulance": "25",
+"comment":"end"
+}
+}

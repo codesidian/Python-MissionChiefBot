@@ -1,0 +1,8 @@
+{
+"missionID": "36",
+"missionTitle":"Chest Pains",
+"missionRequirements": {
+"Ambulance": "1",
+"comment":"end"
+}
+}

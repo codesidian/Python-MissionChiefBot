@@ -1,0 +1,10 @@
+{
+"missionID": "132",
+"missionTitle":"HGV Lost its load (Livestock)",
+"missionRequirements": {
+"Fire engines": "2",
+"Police Cars": "4",
+"Armed Response Personnel": "2",
+"comment":"end"
+}
+}

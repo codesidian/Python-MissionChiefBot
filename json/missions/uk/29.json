@@ -1,0 +1,12 @@
+{
+"missionID": "29",
+"missionTitle":"Unknown Tanker Spill",
+"missionRequirements": {
+"Fire engines": "4",
+"Rescue Support Vehicles": "2",
+"Fire Officers": "2",
+"Police Cars": "3",
+"HazMat Units": "2",
+"comment":"end"
+}
+}

@@ -1,0 +1,16 @@
+{
+"missionID": "70",
+"missionTitle":"Incendio in supermercato (GRANDE)",
+"missionRequirements": {
+"APS/ABP": "6",
+"Funzionari": "1",
+"Autoscale": "1",
+"Unità polisoccorso": "2",
+"Carro aria": "1",
+"UCL": "1",
+"Kilolitriche": "1",
+"Pattuglie": "1",
+"Ambulanza": "25",
+"comment":"end"
+}
+}

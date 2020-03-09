@@ -1,0 +1,11 @@
+{
+"missionID": "60",
+"missionTitle":"Sports hall fire",
+"missionRequirements": {
+"Fire engines": "5",
+"Fire Officers": "1",
+"Aerial Appliance Trucks": "1",
+"Ambulance": "4",
+"comment":"end"
+}
+}

@@ -1,0 +1,10 @@
+{
+"missionID": "33",
+"missionTitle":"Incendio in supermercato (PICCOLO)",
+"missionRequirements": {
+"APS/ABP": "3",
+"Unità polisoccorso": "1",
+"Ambulanza": "4",
+"comment":"end"
+}
+}

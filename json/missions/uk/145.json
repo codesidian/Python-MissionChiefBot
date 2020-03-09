@@ -1,0 +1,16 @@
+{
+"missionID": "145",
+"missionTitle":"Fire in an office building",
+"missionRequirements": {
+"Fire engines": "10",
+"Aerial Appliance Trucks": "4",
+"Rescue Support Vehicles": "2",
+"Fire Officers": "2",
+"Incident Command and Control Units": "1",
+"Police Cars": "3",
+"Breathing Apparatus Support Units": "1",
+"Water Carriers": "1",
+"Ambulance": "4",
+"comment":"end"
+}
+}

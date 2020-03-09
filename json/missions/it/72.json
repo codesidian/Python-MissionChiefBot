@@ -1,0 +1,13 @@
+{
+"missionID": "72",
+"missionTitle":"Incidente aereo (LIEVE)",
+"missionRequirements": {
+"APS/ABP": "3",
+"Funzionari": "1",
+"Unità polisoccorso": "2",
+"Kilolitriche": "1",
+"NBCR": "1",
+"Ambulanza": "6",
+"comment":"end"
+}
+}

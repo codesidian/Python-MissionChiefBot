@@ -1,0 +1,10 @@
+{
+"missionID": "94",
+"missionTitle":"School fire",
+"missionRequirements": {
+"Fire engines": "6",
+"Fire Officers": "2",
+"Ambulance": "6",
+"comment":"end"
+}
+}

@@ -1,0 +1,11 @@
+{
+"missionID": "128",
+"missionTitle":"Silos in fiamme",
+"missionRequirements": {
+"APS/ABP": "3",
+"Autoscale": "1",
+"Unità polisoccorso": "1",
+"Funzionari": "1",
+"comment":"end"
+}
+}

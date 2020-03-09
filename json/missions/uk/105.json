@@ -1,0 +1,9 @@
+{
+"missionID": "105",
+"missionTitle":"Concern for welfare",
+"missionRequirements": {
+"Police Cars": "2",
+"Ambulance": "1",
+"comment":"end"
+}
+}

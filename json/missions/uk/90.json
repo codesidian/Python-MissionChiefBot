@@ -1,0 +1,12 @@
+{
+"missionID": "90",
+"missionTitle":"Cyclist hit by HGV",
+"missionRequirements": {
+"Fire engines": "2",
+"Fire Officers": "1",
+"Rescue Support Vehicles": "1",
+"Police Cars": "2",
+"Ambulance": "1",
+"comment":"end"
+}
+}

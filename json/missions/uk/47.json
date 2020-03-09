@@ -1,0 +1,8 @@
+{
+"missionID": "47",
+"missionTitle":"Parked car accident",
+"missionRequirements": {
+"Police Cars": "1",
+"comment":"end"
+}
+}

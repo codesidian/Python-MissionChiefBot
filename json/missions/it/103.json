@@ -1,0 +1,11 @@
+{
+"missionID": "103",
+"missionTitle":"Cisterna treno danneggiata",
+"missionRequirements": {
+"APS/ABP": "2",
+"Funzionari": "1",
+"NBCR": "1",
+"Unità polisoccorso": "1",
+"comment":"end"
+}
+}

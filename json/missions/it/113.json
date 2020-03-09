@@ -1,0 +1,9 @@
+{
+"missionID": "113",
+"missionTitle":"Caduta da parete rocciosa",
+"missionRequirements": {
+"Unità polisoccorso": "2",
+"Ambulanza": "1",
+"comment":"end"
+}
+}

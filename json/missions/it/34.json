@@ -1,0 +1,15 @@
+{
+"missionID": "34",
+"missionTitle":"Incendio in ospedale",
+"missionRequirements": {
+"APS/ABP": "8",
+"Funzionari": "2",
+"Unità polisoccorso": "3",
+"Kilolitriche": "1",
+"Autoscale": "2",
+"UCL": "1",
+"Carro aria": "1",
+"Ambulanza": "25",
+"comment":"end"
+}
+}

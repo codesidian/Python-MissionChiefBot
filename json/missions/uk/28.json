@@ -1,0 +1,11 @@
+{
+"missionID": "28",
+"missionTitle":"Burning machine",
+"missionRequirements": {
+"Fire engines": "3",
+"Rescue Support Vehicles": "1",
+"Fire Officers": "1",
+"Water Carriers": "1",
+"comment":"end"
+}
+}

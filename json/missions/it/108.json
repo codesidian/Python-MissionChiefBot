@@ -1,0 +1,14 @@
+{
+"missionID": "108",
+"missionTitle":"Tir in bilico sul cavalcavia",
+"missionRequirements": {
+"Autogrù": "1",
+"APS/ABP": "2",
+"Autoscale": "1",
+"Funzionari": "1",
+"Unità polisoccorso": "2",
+"Pattuglie": "2",
+"Ambulanza": "2",
+"comment":"end"
+}
+}

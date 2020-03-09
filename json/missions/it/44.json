@@ -1,0 +1,8 @@
+{
+"missionID": "44",
+"missionTitle":"Taccheggio",
+"missionRequirements": {
+"Pattuglie": "1",
+"comment":"end"
+}
+}

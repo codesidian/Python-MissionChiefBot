@@ -1,0 +1,9 @@
+{
+"missionID": "28",
+"missionTitle":"Macchinario in fiamme",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "1",
+"comment":"end"
+}
+}

@@ -1,0 +1,16 @@
+{
+"missionID": "123",
+"missionTitle":"Incendio stadio",
+"missionRequirements": {
+"APS/ABP": "8",
+"Unità polisoccorso": "3",
+"Autoscale": "2",
+"Funzionari": "1",
+"UCL": "1",
+"Pattuglie": "6",
+"Carro aria": "1",
+"Kilolitriche": "1",
+"Ambulanza": "260",
+"comment":"end"
+}
+}

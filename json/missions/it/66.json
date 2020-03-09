@@ -1,0 +1,10 @@
+{
+"missionID": "66",
+"missionTitle":"Stanza in fiamme",
+"missionRequirements": {
+"APS/ABP": "2",
+"Autoscale": "1",
+"Ambulanza": "1",
+"comment":"end"
+}
+}

@@ -1,0 +1,12 @@
+{
+"missionID": "130",
+"missionTitle":"Multi vehicle RTC entrapment",
+"missionRequirements": {
+"Fire engines": "4",
+"Fire Officers": "1",
+"Rescue Support Vehicles": "1",
+"Police Cars": "2",
+"Ambulance": "7",
+"comment":"end"
+}
+}

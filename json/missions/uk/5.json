@@ -1,0 +1,9 @@
+{
+"missionID": "5",
+"missionTitle":"Room fire",
+"missionRequirements": {
+"Fire engines": "2",
+"Ambulance": "1",
+"comment":"end"
+}
+}

@@ -1,0 +1,9 @@
+{
+"missionID": "25",
+"missionTitle":"Road accident",
+"missionRequirements": {
+"Fire engines": "1",
+"Ambulance": "1",
+"comment":"end"
+}
+}

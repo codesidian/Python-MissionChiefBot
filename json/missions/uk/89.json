@@ -1,0 +1,12 @@
+{
+"missionID": "89",
+"missionTitle":"Road Traffic Collision (Major)",
+"missionRequirements": {
+"Fire engines": "8",
+"Rescue Support Vehicles": "4",
+"Fire Officers": "6",
+"Police Cars": "8",
+"Ambulance": "20",
+"comment":"end"
+}
+}

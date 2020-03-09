@@ -1,0 +1,8 @@
+{
+"missionID": "50",
+"missionTitle":"Fare dodger",
+"missionRequirements": {
+"Police Cars": "1",
+"comment":"end"
+}
+}

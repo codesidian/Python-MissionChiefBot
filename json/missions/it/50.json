@@ -1,0 +1,8 @@
+{
+"missionID": "50",
+"missionTitle":"Passeggero senza biglietto",
+"missionRequirements": {
+"Pattuglie": "1",
+"comment":"end"
+}
+}

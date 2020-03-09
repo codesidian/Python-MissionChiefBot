@@ -1,0 +1,14 @@
+{
+"missionID": "111",
+"missionTitle":"Crollo parziale palazzina",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "2",
+"Autoscale": "1",
+"Funzionari": "1",
+"Pattuglie": "2",
+"Autogrù": "1",
+"Ambulanza": "8",
+"comment":"end"
+}
+}

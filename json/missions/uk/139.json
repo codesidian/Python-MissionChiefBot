@@ -1,0 +1,11 @@
+{
+"missionID": "139",
+"missionTitle":"Fire in silo",
+"missionRequirements": {
+"Fire engines": "8",
+"Aerial Appliance Trucks": "1",
+"Rescue Support Vehicles": "1",
+"Fire Officers": "2",
+"comment":"end"
+}
+}

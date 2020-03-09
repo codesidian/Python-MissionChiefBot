@@ -1,0 +1,8 @@
+{
+"missionID": "8",
+"missionTitle":"Rifiuti sparsi in fiamme",
+"missionRequirements": {
+"APS/ABP": "1",
+"comment":"end"
+}
+}

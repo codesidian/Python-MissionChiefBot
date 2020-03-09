@@ -1,0 +1,8 @@
+{
+"missionID": "45",
+"missionTitle":"Shoplifting",
+"missionRequirements": {
+"Police Cars": "1",
+"comment":"end"
+}
+}

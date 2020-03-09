@@ -1,0 +1,12 @@
+{
+"missionID": "127",
+"missionTitle":"Spray urticante in luogo pubblico",
+"missionRequirements": {
+"APS/ABP": "1",
+"Unità polisoccorso": "1",
+"Pattuglie": "4",
+"NBCR": "1",
+"Ambulanza": "12",
+"comment":"end"
+}
+}

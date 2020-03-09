@@ -1,0 +1,11 @@
+{
+"missionID": "29",
+"missionTitle":"Fuoriuscita sconosciuta da autocisterna",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "1",
+"Pattuglie": "2",
+"NBCR": "1",
+"comment":"end"
+}
+}

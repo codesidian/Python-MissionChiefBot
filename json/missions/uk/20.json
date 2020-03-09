@@ -1,0 +1,10 @@
+{
+"missionID": "20",
+"missionTitle":"Basement fire",
+"missionRequirements": {
+"Fire Officers": "1",
+"Fire engines": "3",
+"Ambulance": "2",
+"comment":"end"
+}
+}

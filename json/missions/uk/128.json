@@ -1,0 +1,10 @@
+{
+"missionID": "128",
+"missionTitle":"RTC Entrapment",
+"missionRequirements": {
+"Fire engines": "2",
+"Police Cars": "1",
+"Ambulance": "2",
+"comment":"end"
+}
+}

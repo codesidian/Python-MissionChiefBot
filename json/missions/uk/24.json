@@ -1,0 +1,8 @@
+{
+"missionID": "24",
+"missionTitle":"Burning bus shelter",
+"missionRequirements": {
+"Fire engines": "1",
+"comment":"end"
+}
+}

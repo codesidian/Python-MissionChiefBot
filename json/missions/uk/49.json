@@ -1,0 +1,8 @@
+{
+"missionID": "49",
+"missionTitle":"Pickpocketing",
+"missionRequirements": {
+"Police Cars": "1",
+"comment":"end"
+}
+}

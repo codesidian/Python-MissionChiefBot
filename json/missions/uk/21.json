@@ -1,0 +1,10 @@
+{
+"missionID": "21",
+"missionTitle":"Chimney fire",
+"missionRequirements": {
+"Aerial Appliance Trucks": "1",
+"Fire Officers": "1",
+"Fire engines": "1",
+"comment":"end"
+}
+}

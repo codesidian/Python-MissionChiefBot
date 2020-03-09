@@ -1,0 +1,11 @@
+{
+"missionID": "102",
+"missionTitle":"Esplosione in box auto",
+"missionRequirements": {
+"APS/ABP": "2",
+"Unità polisoccorso": "1",
+"Pattuglie": "1",
+"Ambulanza": "1",
+"comment":"end"
+}
+}

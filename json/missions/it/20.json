@@ -1,0 +1,11 @@
+{
+"missionID": "20",
+"missionTitle":"Seminterrato in fiamme",
+"missionRequirements": {
+"Funzionari": "1",
+"APS/ABP": "3",
+"Unità polisoccorso": "1",
+"Ambulanza": "2",
+"comment":"end"
+}
+}

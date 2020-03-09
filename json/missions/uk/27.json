@@ -1,0 +1,8 @@
+{
+"missionID": "27",
+"missionTitle":"Garage fire",
+"missionRequirements": {
+"Fire engines": "2",
+"comment":"end"
+}
+}

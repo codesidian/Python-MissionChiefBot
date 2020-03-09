@@ -1,0 +1,11 @@
+{
+"missionID": "124",
+"missionTitle":"Scalatore in difficoltà",
+"missionRequirements": {
+"APS/ABP": "1",
+"Unità polisoccorso": "2",
+"Autoscale": "1",
+"Ambulanza": "1",
+"comment":"end"
+}
+}
