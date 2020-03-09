@@ -448,7 +448,7 @@ def getRequirements(missionId):
   for index, r in enumerate(requirements):
     if r.text:
      if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
-      if "Station" not in r.text or "Caserme" not in r.text or "Stazioni" not in r.text:
+      if "Station" not in r.text:
        requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
        qty = requirements[index+1].text
        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
@@ -490,7 +490,7 @@ if config['DEFAULT'].getboolean('headless_mode') == True:
 browser = webdriver.Chrome(options=chrome_options)
 
   # Load vehicles from our json file.
-with open('../json/requirementlink.json',encoding="utf8") as reqlink:
+with open('../json/vehicles/'+SERVER+'/vehicles.json',encoding="utf8") as reqlink:
   vehicles = json.load(reqlink)
 
   

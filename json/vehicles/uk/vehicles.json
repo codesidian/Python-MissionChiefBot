@@ -1,0 +1,37 @@
+{
+        "UK":[
+		 "UNITED KINGDOM"
+		],
+			"fire engines": [
+			"Water Ladder",
+            "Light 4X4 Pump (L4P)",
+            "Rescue Pump"
+        ],
+			"fire officers": [
+			"Fire Officers"
+        ],
+			"aerial appliance trucks": [
+			"Aerial Appliance"
+        ],
+			"rescue support vehicles": [
+			"Rescue Support Unit (RSU)"
+        ],
+			"water carriers": [
+			"Water Carrier"
+        ],
+			"hazmat units": [
+			"HazMat Unit"
+        ],
+			"police cars": [
+			"Incident response vehicle (IRV)",
+            "Dog Support Unit (DSU)",
+            "Armed Response Vehicle (ARV)",
+        ],
+			"incident command and control units": [
+			"ICCU"
+        ],
+			"ambulance": [
+            "Ambulance"
+        ],
+
+}
