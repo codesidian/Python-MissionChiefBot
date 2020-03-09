@@ -1,7 +1,4 @@
 {
-        "US":[
-		 "UNITED STATES"
-		],
 			"firetrucks": [
 			"Type 1 fire engine",
 			"Type 2 fire engine",
@@ -37,11 +34,11 @@
         ],
 			"ambulance": [
 			"Ambulance"
-        ]
+        ],
 			"ambulances": [
 			"required on some missions",
 			"Ambulance"
-        ]
+        ],
 			"swat personnel": [
 			"SWAT SUV"
         ]

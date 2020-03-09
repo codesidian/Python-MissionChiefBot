@@ -1,7 +1,4 @@
 {
-        "UK":[
-		 "UNITED KINGDOM"
-		],
 			"fire engines": [
 			"Water Ladder",
             "Light 4X4 Pump (L4P)",
@@ -25,13 +22,13 @@
 			"police cars": [
 			"Incident response vehicle (IRV)",
             "Dog Support Unit (DSU)",
-            "Armed Response Vehicle (ARV)",
+            "Armed Response Vehicle (ARV)"
         ],
 			"incident command and control units": [
 			"ICCU"
         ],
 			"ambulance": [
             "Ambulance"
-        ],
+        ]
 
 }

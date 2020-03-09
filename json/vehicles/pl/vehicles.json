@@ -1,7 +1,4 @@
 {
-        "pl":[
-		 "POLSKA"
-		],
 		"samochody pożarnicze":[
 		 "Ciężki samochód gaśniczy",
 		 "Średni samochód gaśniczy"
@@ -21,10 +18,10 @@
 		],
 		"SP Rchem":[
 		 "Samochód ratownictwa chemicznego"
-		]
+		],
 		"samochody SPGaz":[
 		 "SPGaz"
-		]
+		],
 		"radiowozy":[
 		 "Radiowóz"
 		],
