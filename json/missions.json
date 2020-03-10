@@ -1,12 +1,3 @@
 {
-    "missions": {
-        "4324095": {
-            "missionName": "BRAND UTE - RISH\u00d6G",
-            "requirements": "[\n    {\n        \"requirement\": \"sl\\u00e4ckbilar\",\n        \"qty\": \"1\"\n    }\n]"
-        },
-        "4324123": {
-            "missionName": "BRAND UTE - FORDON, MOTORCYKEL",
-            "requirements": "[\n    {\n        \"requirement\": \"sl\\u00e4ckbilar\",\n        \"qty\": \"1\"\n    }\n]"
-        }
-    }
+    "missions": {}
 }
