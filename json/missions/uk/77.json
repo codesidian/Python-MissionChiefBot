@@ -1,8 +1,0 @@
-{
-"missionID": "77",
-"missionTitle":"Patient Transfer",
-"missionRequirements": {
-"Ambulance": "1",
-"comment":"end"
-}
-}

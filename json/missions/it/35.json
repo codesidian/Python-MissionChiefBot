@@ -1,9 +1,0 @@
-{
-"missionID": "35",
-"missionTitle":"Intossicazione da alcol",
-"missionRequirements": {
-"Pattuglie": "1",
-"Ambulanza": "1",
-"comment":"end"
-}
-}

@@ -1,9 +1,0 @@
-{
-"missionID": "118",
-"missionTitle":"Incidente auto-bici",
-"missionRequirements": {
-"Pattuglie": "1",
-"Ambulanza": "1",
-"comment":"end"
-}
-}
