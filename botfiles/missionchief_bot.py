@@ -487,6 +487,12 @@ chromedriver_autoinstaller.install()
 chrome_options = Options()  
 if config['DEFAULT'].getboolean('headless_mode') == True:
   chrome_options.add_argument("--headless")  
+
+if "pytest" in sys.modules:
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    
 browser = webdriver.Chrome(options=chrome_options)
 
   # Load vehicles from our json file.
