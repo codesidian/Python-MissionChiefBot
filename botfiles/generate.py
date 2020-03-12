@@ -20,7 +20,7 @@ def getMissions():
     jsonpath = '../json/missions/' + SERVER  + '/'
     if(os.path.exists(jsonpath) == False):
       os.mkdir(jsonpath)
-    with open(jsonpath + missionId +'.json', 'w') as outfile:
+    with open(jsonpath + missionId +'.json',encoding="utf8") as outfile:
       data  = {}
       data['missionId'] = missionId
       data['missionName'] = missionName

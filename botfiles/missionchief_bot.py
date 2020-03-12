@@ -438,27 +438,35 @@ def getRequirements(missionId):
   print("Getting requirements")
   
   requirementsurl = browser.find_element_by_xpath('//a[contains(@href, "einsaetze")]').get_attribute('href')
-  logger.debug("Visiting %s",requirementsurl)
-  browser.get(requirementsurl)
-  requiredlist = []
-  logger.debug("Grabbing table elements")
-  requirements = browser.find_elements_by_tag_name('td')
-  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-  logger.debug("Looping through the table to extract each vehicle")
-  for index, r in enumerate(requirements):
-    if r.text:
-     if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
-      if "Station" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningstationer" not in r.text:
-       requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
-       qty = requirements[index+1].text
-       print(f"Requirement found :   {str(qty)} x {str(requirement)}")
-       requiredlist.append({'requirement':requirement,'qty': qty })
-  print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-  if(len(requiredlist)==0):
-   logger.warning("No requirements were found, appending 1 ambulance?")
-   requiredlist.append({'requirement':'ambulance','qty': 1 })
-
-  return requiredlist
+  requirementId = requirementsurl.split("?")[0].split("/")[4]
+  rfile = "../json/missions/" + SERVER  + '/' + requirementId + '.json'
+  # If we have generated the missions, and the file exists.
+  if(os.path.exists(rfile) == True):
+    # Open the file get the requirements and return them, as they're previously saved (not via cache)
+    with open(rfile,encoding="utf8") as requirementfile:
+     return json.load(requirementfile)['requirements']
+    #  Else, either we don't have the mission saved, or - somehow we don't know it. Find requirements manually and return.
+  else:
+    logger.debug("Visiting %s",requirementsurl)
+    browser.get(requirementsurl)
+    requiredlist = []
+    logger.debug("Grabbing table elements")
+    requirements = browser.find_elements_by_tag_name('td')
+    print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+    logger.debug("Looping through the table to extract each vehicle")
+    for index, r in enumerate(requirements):
+     if r.text:
+      if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
+       if "Station" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningstationer" not in r.text:
+        requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
+        qty = requirements[index+1].text
+        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
+        requiredlist.append({'requirement':requirement,'qty': qty })
+    print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
+    if(len(requiredlist)==0):
+     logger.warning("No requirements were found, appending 1 ambulance?")
+    requiredlist.append({'requirement':'ambulance','qty': 1 })
+    return requiredlist
 
   
 
