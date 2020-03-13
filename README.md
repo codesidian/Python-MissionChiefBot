@@ -1,3 +1,4 @@
+![Build Status](https://github.com/codesidian/Python-MissionChiefBot/workflows/Mission%20Chief%20Tests/badge.svg)
 # Python Mission Chief Bot
 
 A small bot for the game missionchief written in Python
@@ -33,6 +34,8 @@ Once you're done double click the `run.bat` located in the main folder. This wil
  ### Mac
  cd into the bots directory and run `bat run.sh`. This will force check any requirements and run the script for you. Ensure python is installed.
 
+## Increase speed
+If you'd like to increase the speed of the bot, I would recommend running `generatemissions.bat` or run `generate.py` (located in the botfiles folder) before running the bot, this will cache/save all the missions it can find with requirements ready for the bot to read
 
 
 ## Issues / Bugs / Errors
