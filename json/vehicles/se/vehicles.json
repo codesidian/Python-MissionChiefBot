@@ -1,0 +1,35 @@
+{
+			"släckbilar": [
+			"BAS 1 - Släckbil",
+			"BAS 2 - Släckbil",
+			"Räddningsbil"
+        ],
+			"stegbilar": [
+			"Stegbil"
+        ],
+            "tankbilar": [
+			"Tankbil"
+        ],
+			"brandchefsbilar": [
+			"Befälsfordon"
+        ],
+			"polisbilar": [
+			"Radiobil"
+        ],
+			"ledningsfordon": [
+			"Räddningsledning"
+        ],
+			"lastväxlare": [
+			"Lastväxlare",
+			"Räddningsbil"
+        ],
+			"fordon med luftapparater": [
+			"Luftfordon"
+        ],
+			"farligt gods-fordon": [
+			"Kemskyddsenhet"
+        ],
+			"ambulance": [
+			"Ambulans"
+		]
+}

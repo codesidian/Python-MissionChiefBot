@@ -1,0 +1,34 @@
+{
+			"APS/ABP": [
+			"ABP",
+			"APS"
+		],
+			"Unità polisoccorso": [
+			"APS",
+			"CA/POLI"
+		],
+			"Autoscale": [
+			"AS"
+		],
+			"Funzionari": [
+			"AV/FNZ"
+		],
+			"Autogrù": [
+			"Autogrù"
+		],
+			"Kilolitrica": [
+			"KILO"
+		],
+			"UCL": [
+			"UCL"
+		],
+			"Carro aria": [
+			"AF/ARIA"
+		],
+			"Pattuglie": [
+			"Volante"
+		],
+			"ambulance": [
+			"Ambulanza BLSD"
+		]
+}
