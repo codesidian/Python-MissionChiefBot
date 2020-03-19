@@ -465,7 +465,7 @@ def getRequirements(missionId):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     if(len(requiredlist)==0):
      logger.warning("No requirements were found, appending 1 ambulance?")
-    requiredlist.append({'requirement':'ambulance','qty': 1 })
+     requiredlist.append({'requirement':'ambulance','qty': 1 })
     return requiredlist
 
   
