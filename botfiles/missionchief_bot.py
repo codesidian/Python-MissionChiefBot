@@ -62,8 +62,7 @@ class MissonChiefBot:
           print(e)
           print(Fore.RED + "Please create an issue on github or post in our discord\n"+
                 "Include your output and the debug.log file so we can debug it! :)" +Style.RESET_ALL)
-          
-          break
+          print(Fore.RED + "Restarting bot...." +Style.RESET_ALL);
     else: 
       print("Couldn't log in...")
   def pageloaded(self): 
@@ -359,6 +358,15 @@ class MissonChiefBot:
     if(checkedunits==True):
       logger.debug("Submitting mission")
       browser.find_element_by_name('commit').click()
+      # If the requirement is ambulance, and it's been submitted
+      if(requirement['requirement'])=="ambulance":
+        browser.get(BASE_URL + "missions/"+mission.getID())
+        try:
+          browser.find_element_by_id("process_talking_wish_btn").click()
+          browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
+        except NoSuchElementException as e:
+         logger.debug("Is ambulance but no patient to send anywhere..")
+
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
       ########################################
@@ -456,9 +464,10 @@ def getRequirements(missionId):
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
      if r.text:
-      if "Required" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
-       if "Station" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningsstationer" not in r.text:
-        requirement = r.text.replace('Required','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
+      if "Required" in r.text or "Wymagane" in r.text or "Wymagany" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
+       if "Station" not in r.text and "posterunki" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningsstationer" not in r.text:
+        requirement = r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
+
         qty = requirements[index+1].text
         print(f"Requirement found :   {str(qty)} x {str(requirement)}")
         requiredlist.append({'requirement':requirement,'qty': qty })
