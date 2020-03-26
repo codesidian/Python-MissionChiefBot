@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
-import platform,os,sys,logging,configparser,json
+import platform,os,sys,logging,configparser,json,time
 from helpers import randomsleep
 from colorama import init,Fore,Style
 from vehicle import Vehicle
@@ -358,10 +358,20 @@ class MissonChiefBot:
     if(checkedunits==True):
       logger.debug("Submitting mission")
       browser.find_element_by_name('commit').click()
-      # If the requirement is ambulance, and it's been submitted
+      # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
       if(requirement['requirement'])=="ambulance":
         browser.get(BASE_URL + "missions/"+mission.getID())
         try:
+          # Wait first couple seconds to wait for JS to init the time.
+          time.sleep(2)
+          remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
+          mins = int(remaining.split(":")[0].replace(":","")) * 60
+          seconds = int(remaining.split(":")[1].replace(":",""))
+          wait = (mins + seconds) * 2
+          print(f"Ambulance waiting {wait} seconds to despatch patient")
+          time.sleep(wait)
+          browser.get(BASE_URL + "missions/"+mission.getID())
+          browser.refresh();
           browser.find_element_by_id("process_talking_wish_btn").click()
           browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
         except NoSuchElementException as e:
@@ -369,19 +379,8 @@ class MissonChiefBot:
 
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
-      ########################################
-      # ### Example of getting vehicle arrival time, might be useful information to grab.
-      # if ownedVehicle.getStatus() == '3':
-      #   # We sleep as it's not immediately available
-      #   time.sleep(5)
-      #   try:
-      #     remaining = browser.find_element_by_id('vehicle_drive_'+ ownedVehicle.getID()).text
-      #     browser.execute_script("arguments[0].scrollIntoView();", remaining)
-      #     print(f"{ownedVehicle.getName()} - {remaining} time remaining till arrival")
-      #   except NoSuchElementException as e: 
-      #     logger.debug("Could not find remaining time element")
-      # ########################################
-      logger.debug("Checking if missions is in our despatches")
+
+      logger.debug("Checking if missions is in our despatches list")
       if(mission not in self.despatches):
         logger.debug("Adding it")
         currDespatch = Despatch(mission.getID(),despatchedVehicles,10)
@@ -480,7 +479,7 @@ def getRequirements(missionId):
   
 
 
-logger = setup_logger('botLogger','debug.log',level=logging.DEBUG)
+logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.ConfigParser()
