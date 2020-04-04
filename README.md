@@ -21,7 +21,7 @@ A small bot for the game missionchief written in Python
 ## How to use
 Download the code [here](https://github.com/codesidian/Python-MissionChiefBot/archive/master.zip), make sure you install Python from [here](https://www.python.org/downloads/) then extract the files to a folder of your choice (Just keep the files together)
 
-Once done open the `config.ini` and replace corresponding `email` and `password` with your account information, and `server` with the country  your account is registered on such as `uk`. All working countries will be in the `server.ini`
+Once done open the `config.ini` inside the config folder and replace corresponding `email` and `password` with your account information, and `server` with the country  your account is registered on such as `uk`. All working countries will be in the `server.ini`
 `mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
 If you don't want to see the browser window set `headless_mode` to `true`
 
@@ -35,7 +35,7 @@ Once you're done double click the `run.bat` located in the main folder. This wil
  cd into the bots directory and run `bat run.sh`. This will force check any requirements and run the script for you. Ensure python is installed.
 
 ## Increase speed
-If you'd like to increase the speed of the bot, I would recommend running `generatemissions.bat` or run `generate.py` (located in the botfiles folder) before running the bot, this will cache/save all the missions it can find with requirements ready for the bot to read
+If you'd like to increase the speed of the bot, I would recommend running `generatemissions.bat` or run `generate.py` (located in the botfiles folder) before running the bot, this will cache/save all the missions it can find with requirements ready for the bot to read.
 
 
 ## Issues / Bugs / Errors

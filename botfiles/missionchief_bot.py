@@ -458,17 +458,14 @@ def getRequirements(missionId):
     browser.get(requirementsurl)
     requiredlist = []
     logger.debug("Grabbing table elements")
-    requirements = browser.find_elements_by_tag_name('td')
+    requirements = browser.find_elements_by_tag_name('table')[1].find_elements_by_tag_name('td')
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
-     if r.text:
-      if "Required" in r.text or "Wymagane" in r.text or "Wymagany" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
-       if "Station" not in r.text and "posterunki" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningsstationer" not in r.text:
-        requirement = r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
-
+     if r.text.isdigit() == False and len(r.text)>0:
+        requirement =  r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
         qty = requirements[index+1].text
-        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
+        print(f"Requirement found : {str(qty)} x {str(requirement)}")
         requiredlist.append({'requirement':requirement,'qty': qty })
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     if(len(requiredlist)==0):
@@ -483,7 +480,7 @@ logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.ConfigParser()
-config.read('../config.ini')
+config.read('../config/config.ini')
 #BASE_URL = config['DEFAULT']['url']
 SERVER = config['DEFAULT']['server']
 MISSION_BATCH_NUM = int(config['DEFAULT']['mission_batch_amount'])
@@ -492,7 +489,7 @@ password = config['DEFAULT']['password'].strip()
 #print("Selected server ", SERVER)
 
 servers = configparser.ConfigParser()
-servers.read('../server.ini')
+servers.read('../config/server.ini')
 BASE_URL = servers[SERVER]['url']
 SERVER_REGION = servers[SERVER]['name']
 
