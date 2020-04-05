@@ -306,11 +306,11 @@ class MissonChiefBot:
         browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]").click()
     except (NoSuchElementException,ElementClickInterceptedException) as e:
       logger.debug("Could not find missing vehicles")
+    checkedunits = False
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
       logger.debug("%s %s are needed",todes,requirement['requirement'].encode("UTF-8"))
       des = 0
-      checkedunits = False
       logger.debug("Going through the requirements and the user's vehicles to dispatch")
       try: 
         for category in vehicles:
@@ -479,7 +479,7 @@ def transport(mission,waittime):
     browser2 = webdriver.Chrome(options=chrome_options)
     login(username,password,browser2)
     browser2.get(BASE_URL + "missions/"+mission.getID())
-    browser2.refresh();
+    browser2.refresh()
     browser2.find_element_by_id("process_talking_wish_btn").click()
     browser2.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
     browser2.close()
