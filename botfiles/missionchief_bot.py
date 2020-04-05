@@ -306,11 +306,11 @@ class MissonChiefBot:
         browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]").click()
     except (NoSuchElementException,ElementClickInterceptedException) as e:
       logger.debug("Could not find missing vehicles")
+    checkedunits = False
     for requirement in mission.getRequirements():
       todes = int(requirement['qty'])
       logger.debug("%s %s are needed",todes,requirement['requirement'].encode("UTF-8"))
       des = 0
-      checkedunits = False
       logger.debug("Going through the requirements and the user's vehicles to dispatch")
       try: 
         for category in vehicles:
@@ -336,7 +336,7 @@ class MissonChiefBot:
                       # If amount of despatched is less than required.
                       logger.debug("Checking if there required quantity as been achieved")  
           
-                        # If the checkbox ID is that for the vehicle, scroll to and click.
+                      # If the checkbox ID is that for the vehicle, scroll to and click.
                       if checkbox.get_attribute('value') == ownedVehicle.getID():
                         logger.debug("There is a checkbox with the id "+ownedVehicle.getID() )             
                         browser.execute_script("arguments[0].scrollIntoView();", checkbox)
@@ -355,38 +355,38 @@ class MissonChiefBot:
       except NothingToDespatch as e:
         logger.error("There's nothing to despatch: %s",e)
         continue            
-      # If units have been checked, we need to despatch them.
-      logger.debug("Checking if there are vehicles checked")
-      if checkedunits:
-        logger.debug("Submitting mission")
-        browser.find_element_by_name('commit').click()
-        # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
-        if requirement['requirement']=="ambulance":
-          browser.get(BASE_URL + "missions/"+mission.getID())
-          # Wait first couple seconds to wait for JS to init the time.
-          time.sleep(2)
-          remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
-          mins = int(remaining.split(":")[0].replace(":","")) * 60
-          seconds = int(remaining.split(":")[1].replace(":",""))
-          wait = (mins + seconds) * 2
-        # We push it to a new thread, preventing the current operation stalling.
-          thread = Thread(target = transport, args = (mission,wait, ))
-          print("Opening thread for ambulance")
-          thread.start()
-          pass
-        print(f"{des} units despatched")
-        logger.debug("%s vehicles have been despatched", des)
+    # If units have been checked, we need to despatch them.
+    logger.debug("Checking if there are vehicles checked")
+    if checkedunits:
+      logger.debug("Submitting mission")
+      browser.find_element_by_name('commit').click()
+      # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
+      if requirement['requirement']=="ambulance":
+        browser.get(BASE_URL + "missions/"+mission.getID())
+        # Wait first couple seconds to wait for JS to init the time.
+        time.sleep(2)
+        remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
+        mins = int(remaining.split(":")[0].replace(":","")) * 60
+        seconds = int(remaining.split(":")[1].replace(":",""))
+        wait = (mins + seconds) * 2
+      # We push it to a new thread, preventing the current operation stalling.
+        thread = Thread(target = transport, args = (mission,wait, ))
+        print("Opening thread for ambulance")
+        thread.start()
+        pass
+      print(f"{des} units despatched")
+      logger.debug("%s vehicles have been despatched", des)
 
-        logger.debug("Checking if missions is in our despatches list")
-        if(mission not in self.despatches):
-          logger.debug("Adding it")
-          currDespatch = Despatch(mission.getID(),despatchedVehicles,10)
-          self.despatches.append(currDespatch)
-        else:
-          logger.debug("Already exists, fulfilled partial despatch")
+      logger.debug("Checking if missions is in our despatches list")
+      if(mission not in self.despatches):
+        logger.debug("Adding it")
+        currDespatch = Despatch(mission.getID(),despatchedVehicles,10)
+        self.despatches.append(currDespatch)
       else:
-        logger.debug("No vehicles select, nothing to despatch")
-        print("Nothing to despatch")
+        logger.debug("Already exists, fulfilled partial despatch")
+    else:
+      logger.debug("No vehicles select, nothing to despatch")
+      print("Nothing to despatch")
         
   def logState(self):
     """
@@ -479,7 +479,7 @@ def transport(mission,waittime):
     browser2 = webdriver.Chrome(options=chrome_options)
     login(username,password,browser2)
     browser2.get(BASE_URL + "missions/"+mission.getID())
-    browser2.refresh();
+    browser2.refresh()
     browser2.find_element_by_id("process_talking_wish_btn").click()
     browser2.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
     browser2.close()
