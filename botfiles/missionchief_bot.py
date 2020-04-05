@@ -1,12 +1,14 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
-import platform,os,sys,logging,configparser,json,time
+import platform, os, sys, logging, configparser, json, time
 from helpers import randomsleep
 from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
+from threading import Thread
+
 import chromedriver_autoinstaller
 
 
@@ -46,7 +48,7 @@ class MissonChiefBot:
     self.missionsSeen = []
     
     logger.info("Attempting login")
-    logged_in = login(username,password)
+    logged_in = login(username,password,browser)
     if logged_in:
       logger.info("User is logged in")
       logger.info("Building Vehicles")
@@ -117,7 +119,7 @@ class MissonChiefBot:
     print("Building New Missions")
     logger.debug("Grabbing mission urls and hrefs")
     browser.get(url)
-    links = browser.find_elements_by_xpath("//a[contains(@href,'missions')]")
+    links = browser.find_elements_by_xpath("//div[contains(@id,'missions')]/div/div[not(contains(@class,'mission_alliance_distance_hide') or contains(@class,'mission_deleted'))]/div/div/a[contains(@href,'missions')]")
     checked = 0
     currBatchNum = 0
     for link in links:
@@ -132,7 +134,7 @@ class MissonChiefBot:
     if haveVehiclesAvailable:
       for href in hrefs:
         missionId = href.split("/")[4]
-        if(href not in self.missionsSeen and currBatchNum < MISSION_BATCH_NUM):
+        if href not in self.missionsSeen and currBatchNum < MISSION_BATCH_NUM:
           currBatchNum+=1
           self.missionsSeen.append(href)
           try:
@@ -256,7 +258,7 @@ class MissonChiefBot:
       logger.info("Doing missions")
       for mission in self.missionList:
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
-        if(mission not in self.despatches):
+        if mission not in self.despatches:
           logger.debug("It hasn't, despatching.")
           self.despatchVehicles(mission)
         else:
@@ -321,12 +323,12 @@ class MissonChiefBot:
                 checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
                 # Check the checkboxes against our vehicle, see if the checkbox is available.
                 for checkbox in checkboxes:
-                  if(des<todes):
+                  if des<todes:
                    logger.debug("Mission still needs vehicles, despatching.")
                   #   For each vehicle in our available list
                    for ownedVehicle in self.vehicleList:
                     #  Check the type is what we need, and available for despatch
-                    if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
+                    if ownedVehicle.getType() == vehicle and ownedVehicle.despatchable():
                       logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
                       #print("We have a " + category + " " + ownedVehicle.getType() + " available")
                       #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
@@ -334,7 +336,7 @@ class MissonChiefBot:
                       # If amount of despatched is less than required.
                       logger.debug("Checking if there required quantity as been achieved")  
           
-                        # If the checkbox ID is that for the vehicle, scroll to and click.
+                      # If the checkbox ID is that for the vehicle, scroll to and click.
                       if checkbox.get_attribute('value') == ownedVehicle.getID():
                         logger.debug("There is a checkbox with the id "+ownedVehicle.getID() )             
                         browser.execute_script("arguments[0].scrollIntoView();", checkbox)
@@ -355,28 +357,23 @@ class MissonChiefBot:
         continue            
     # If units have been checked, we need to despatch them.
     logger.debug("Checking if there are vehicles checked")
-    if(checkedunits==True):
+    if checkedunits:
       logger.debug("Submitting mission")
       browser.find_element_by_name('commit').click()
       # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
-      if(requirement['requirement'])=="ambulance":
+      if requirement['requirement']=="ambulance":
         browser.get(BASE_URL + "missions/"+mission.getID())
-        try:
-          # Wait first couple seconds to wait for JS to init the time.
-          time.sleep(2)
-          remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
-          mins = int(remaining.split(":")[0].replace(":","")) * 60
-          seconds = int(remaining.split(":")[1].replace(":",""))
-          wait = (mins + seconds) * 2
-          print(f"Ambulance waiting {wait} seconds to despatch patient")
-          time.sleep(wait)
-          browser.get(BASE_URL + "missions/"+mission.getID())
-          browser.refresh();
-          browser.find_element_by_id("process_talking_wish_btn").click()
-          browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
-        except NoSuchElementException as e:
-         logger.debug("Is ambulance but no patient to send anywhere..")
-
+        # Wait first couple seconds to wait for JS to init the time.
+        time.sleep(2)
+        remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
+        mins = int(remaining.split(":")[0].replace(":","")) * 60
+        seconds = int(remaining.split(":")[1].replace(":",""))
+        wait = (mins + seconds) * 2
+      # We push it to a new thread, preventing the current operation stalling.
+        thread = Thread(target = transport, args = (mission,wait, ))
+        print("Opening thread for ambulance")
+        thread.start()
+        pass
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
 
@@ -390,7 +387,7 @@ class MissonChiefBot:
     else:
       logger.debug("No vehicles select, nothing to despatch")
       print("Nothing to despatch")
-      
+        
   def logState(self):
     """
       Output program state to the logfile
@@ -399,7 +396,7 @@ class MissonChiefBot:
     with open("./debug/debug.log", "a") as log:
       log.write("")
       
-def login(username,password):
+def login(username,password,browser):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     print("Connecting to the region: ", SERVER_REGION ) 
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
@@ -418,7 +415,7 @@ def login(username,password):
     # Submitting login
     logger.info("Submitting login form")
     browser.find_element_by_name('commit').click()
-    try : 
+    try: 
      # check we are logged in- by grabbing a random tag only visible on log in.
      logger.debug("Checking if logged in")
      alliance = browser.find_element_by_id('alliance_li')
@@ -448,7 +445,7 @@ def getRequirements(missionId):
   requirementId = requirementsurl.split("?")[0].split("/")[4]
   rfile = "../json/missions/" + SERVER  + '/' + requirementId + '.json'
   # If we have generated the missions, and the file exists.
-  if(os.path.exists(rfile) == True):
+  if os.path.exists(rfile):
     # Open the file get the requirements and return them, as they're previously saved (not via cache)
     with open(rfile,encoding="utf8") as requirementfile:
      return json.load(requirementfile)['requirements']
@@ -462,19 +459,35 @@ def getRequirements(missionId):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
-     if r.text.isdigit() == False and len(r.text)>0:
+     if not r.text.isdigit() and len(r.text)>0:
         requirement =  r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
         qty = requirements[index+1].text
         print(f"Requirement found : {str(qty)} x {str(requirement)}")
         requiredlist.append({'requirement':requirement,'qty': qty })
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-    if(len(requiredlist)==0):
+    if len(requiredlist)==0:
      logger.warning("No requirements were found, appending 1 ambulance?")
      requiredlist.append({'requirement':'ambulance','qty': 1 })
     return requiredlist
 
-  
-
+def transport(mission,waittime):
+  print("Waiting to transport in seperate thread")
+  try:
+    # Login to the second window.
+    print(f"Ambulance waiting {waittime} seconds to despatch patient")
+    time.sleep(waittime)
+    browser2 = webdriver.Chrome(options=chrome_options)
+    login(username,password,browser2)
+    browser2.get(BASE_URL + "missions/"+mission.getID())
+    browser2.refresh();
+    browser2.find_element_by_id("process_talking_wish_btn").click()
+    browser2.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
+    browser2.close()
+    print(f"Transport sucessful for {mission.getName()}")
+  except NoSuchElementException as e:
+    print("Unable to transport ambulance, either timed out or failed.")
+    logger.debug("Is ambulance but no patient to send anywhere..")
+    browser2.close()
 
 logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
@@ -498,7 +511,7 @@ SERVER_REGION = servers[SERVER]['name']
 chromedriver_autoinstaller.install() 
 
 chrome_options = Options()  
-if config['DEFAULT'].getboolean('headless_mode') == True:
+if config['DEFAULT'].getboolean('headless_mode'):
   chrome_options.add_argument("--headless")  
 
 if "pytest" in sys.modules:
@@ -513,7 +526,7 @@ with open('../json/vehicles/'+SERVER+'/vehicles.json',encoding="utf8") as reqlin
   vehicles = json.load(reqlink)
 
   
-def begin(): 
+def begin():
  MissonChiefBot()
 
 if __name__ == '__main__':
