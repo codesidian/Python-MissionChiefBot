@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
-import platform,os,sys,logging,configparser,json,time
+import platform, os, sys, logging, configparser, json, time
 from helpers import randomsleep
 from colorama import init,Fore,Style
 from vehicle import Vehicle
@@ -134,7 +134,7 @@ class MissonChiefBot:
     if haveVehiclesAvailable:
       for href in hrefs:
         missionId = href.split("/")[4]
-        if(href not in self.missionsSeen and currBatchNum < MISSION_BATCH_NUM):
+        if href not in self.missionsSeen and currBatchNum < MISSION_BATCH_NUM:
           currBatchNum+=1
           self.missionsSeen.append(href)
           try:
@@ -258,7 +258,7 @@ class MissonChiefBot:
       logger.info("Doing missions")
       for mission in self.missionList:
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
-        if(mission not in self.despatches):
+        if mission not in self.despatches:
           logger.debug("It hasn't, despatching.")
           self.despatchVehicles(mission)
         else:
@@ -323,12 +323,12 @@ class MissonChiefBot:
                 checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
                 # Check the checkboxes against our vehicle, see if the checkbox is available.
                 for checkbox in checkboxes:
-                  if(des<todes):
+                  if des<todes:
                    logger.debug("Mission still needs vehicles, despatching.")
                   #   For each vehicle in our available list
                    for ownedVehicle in self.vehicleList:
                     #  Check the type is what we need, and available for despatch
-                    if(ownedVehicle.getType() == vehicle and (ownedVehicle.despatchable())):
+                    if ownedVehicle.getType() == vehicle and ownedVehicle.despatchable():
                       logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
                       #print("We have a " + category + " " + ownedVehicle.getType() + " available")
                       #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
@@ -357,11 +357,11 @@ class MissonChiefBot:
         continue            
       # If units have been checked, we need to despatch them.
       logger.debug("Checking if there are vehicles checked")
-      if(checkedunits==True):
+      if checkedunits:
         logger.debug("Submitting mission")
         browser.find_element_by_name('commit').click()
         # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
-        if(requirement['requirement'])=="ambulance":
+        if requirement['requirement']=="ambulance":
           browser.get(BASE_URL + "missions/"+mission.getID())
           # Wait first couple seconds to wait for JS to init the time.
           time.sleep(2)
@@ -415,7 +415,7 @@ def login(username,password,browser):
     # Submitting login
     logger.info("Submitting login form")
     browser.find_element_by_name('commit').click()
-    try : 
+    try: 
      # check we are logged in- by grabbing a random tag only visible on log in.
      logger.debug("Checking if logged in")
      alliance = browser.find_element_by_id('alliance_li')
@@ -445,7 +445,7 @@ def getRequirements(missionId):
   requirementId = requirementsurl.split("?")[0].split("/")[4]
   rfile = "../json/missions/" + SERVER  + '/' + requirementId + '.json'
   # If we have generated the missions, and the file exists.
-  if(os.path.exists(rfile) == True):
+  if os.path.exists(rfile):
     # Open the file get the requirements and return them, as they're previously saved (not via cache)
     with open(rfile,encoding="utf8") as requirementfile:
      return json.load(requirementfile)['requirements']
@@ -459,13 +459,13 @@ def getRequirements(missionId):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
-     if r.text.isdigit() == False and len(r.text)>0:
+     if not r.text.isdigit() and len(r.text)>0:
         requirement =  r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
         qty = requirements[index+1].text
         print(f"Requirement found : {str(qty)} x {str(requirement)}")
         requiredlist.append({'requirement':requirement,'qty': qty })
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-    if(len(requiredlist)==0):
+    if len(requiredlist)==0:
      logger.warning("No requirements were found, appending 1 ambulance?")
      requiredlist.append({'requirement':'ambulance','qty': 1 })
     return requiredlist
@@ -511,7 +511,7 @@ SERVER_REGION = servers[SERVER]['name']
 chromedriver_autoinstaller.install() 
 
 chrome_options = Options()  
-if config['DEFAULT'].getboolean('headless_mode') == True:
+if config['DEFAULT'].getboolean('headless_mode'):
   chrome_options.add_argument("--headless")  
 
 if "pytest" in sys.modules:
