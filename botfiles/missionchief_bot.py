@@ -7,6 +7,8 @@ from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
+from threading import Thread
+
 import chromedriver_autoinstaller
 
 
@@ -46,7 +48,7 @@ class MissonChiefBot:
     self.missionsSeen = []
     
     logger.info("Attempting login")
-    logged_in = login(username,password)
+    logged_in = login(username,password,browser)
     if logged_in:
       logger.info("User is logged in")
       logger.info("Building Vehicles")
@@ -361,22 +363,17 @@ class MissonChiefBot:
         # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
         if(requirement['requirement'])=="ambulance":
           browser.get(BASE_URL + "missions/"+mission.getID())
-          try:
-            # Wait first couple seconds to wait for JS to init the time.
-            time.sleep(2)
-            remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
-            mins = int(remaining.split(":")[0].replace(":","")) * 60
-            seconds = int(remaining.split(":")[1].replace(":",""))
-            wait = (mins + seconds) * 2
-            print(f"Ambulance waiting {wait} seconds to despatch patient")
-            time.sleep(wait)
-            browser.get(BASE_URL + "missions/"+mission.getID())
-            browser.refresh();
-            browser.find_element_by_id("process_talking_wish_btn").click()
-            browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
-          except NoSuchElementException as e:
-           logger.debug("Is ambulance but no patient to send anywhere..")
-
+          # Wait first couple seconds to wait for JS to init the time.
+          time.sleep(2)
+          remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
+          mins = int(remaining.split(":")[0].replace(":","")) * 60
+          seconds = int(remaining.split(":")[1].replace(":",""))
+          wait = (mins + seconds) * 2
+        # We push it to a new thread, preventing the current operation stalling.
+          thread = Thread(target = transport, args = (mission,wait, ))
+          print("Opening thread for ambulance")
+          thread.start()
+          pass
         print(f"{des} units despatched")
         logger.debug("%s vehicles have been despatched", des)
 
@@ -399,7 +396,7 @@ class MissonChiefBot:
     with open("./debug/debug.log", "a") as log:
       log.write("")
       
-def login(username,password):
+def login(username,password,browser):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     print("Connecting to the region: ", SERVER_REGION ) 
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
@@ -473,8 +470,24 @@ def getRequirements(missionId):
      requiredlist.append({'requirement':'ambulance','qty': 1 })
     return requiredlist
 
-  
-
+def transport(mission,waittime):
+  print("Waiting to transport in seperate thread")
+  try:
+    # Login to the second window.
+    print(f"Ambulance waiting {waittime} seconds to despatch patient")
+    time.sleep(waittime)
+    browser2 = webdriver.Chrome(options=chrome_options)
+    login(username,password,browser2)
+    browser2.get(BASE_URL + "missions/"+mission.getID())
+    browser2.refresh();
+    browser2.find_element_by_id("process_talking_wish_btn").click()
+    browser2.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
+    browser2.close()
+    print(f"Transport sucessful for {mission.getName()}")
+  except NoSuchElementException as e:
+    print("Unable to transport ambulance, either timed out or failed.")
+    logger.debug("Is ambulance but no patient to send anywhere..")
+    browser2.close()
 
 logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
@@ -513,7 +526,7 @@ with open('../json/vehicles/'+SERVER+'/vehicles.json',encoding="utf8") as reqlin
   vehicles = json.load(reqlink)
 
   
-def begin(): 
+def begin():
  MissonChiefBot()
 
 if __name__ == '__main__':
