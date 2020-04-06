@@ -294,6 +294,11 @@ class MissonChiefBot:
     print(f"Going to mission {mission.getName()}")
     logger.debug("Visiting the url")
     browser.get(BASE_URL + "missions/"+mission.getID())
+    try:
+      browser.find_element_by_xpath('//a[contains(@href, "easteregg")]').click()
+      print("Egg was clicked")
+    except (NoSuchElementException,ElementClickInterceptedException) as e:
+      print("There was no egg or failed to click")
     loaded = self.pageloaded()
     if loaded:
       print("Checking requirements for " + mission.getName())
@@ -440,7 +445,6 @@ def getRequirements(missionId):
   """
   logger.debug("Grabbing requirements for %s",missionId)
   print("Getting requirements")
-  
   requirementsurl = browser.find_element_by_xpath('//a[contains(@href, "einsaetze")]').get_attribute('href')
   requirementId = requirementsurl.split("?")[0].split("/")[4]
   rfile = "../json/missions/" + SERVER  + '/' + requirementId + '.json'
