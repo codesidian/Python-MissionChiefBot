@@ -257,15 +257,17 @@ class MissonChiefBot:
     if not JUST_BUILD_DATA:
       logger.info("Doing missions")
       for mission in self.missionList:
+        browser.get(BASE_URL)
+        missionColor = browser.find_element_by_xpath('//div[contains(@id, "mission_panel_'+mission.getID()+'")]').get_attribute('class')
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
-        if mission not in self.despatches:
+        if mission not in self.despatches and "mission_panel_red" in missionColor:
           logger.debug("It hasn't, despatching.")
           self.despatchVehicles(mission)
         else:
           logger.debug("Checking if %s is partial despatch", mission.getName())
           #We need to make sure that there's no missions with half dispatches (if there weren't enough vehicles to begin with)
           for despatch in self.despatches:
-            if despatch == mission:
+            if despatch == mission and "mission_panel_red" in missionColor:
               totalVehiclesRequired = 0
               for requirement in mission.getRequirements():
                 totalVehiclesRequired += int(requirement['qty'])
@@ -296,9 +298,9 @@ class MissonChiefBot:
     browser.get(BASE_URL + "missions/"+mission.getID())
     try:
       browser.find_element_by_xpath('//a[contains(@href, "easteregg")]').click()
-      print("Egg was clicked")
+      print(Fore.YELLOW + "Egg was clicked" + Style.RESET_ALL)
     except (NoSuchElementException,ElementClickInterceptedException) as e:
-      print("There was no egg or failed to click")
+      print(Fore.YELLOW + "There was no egg or failed to click" + Style.RESET_ALL)
     loaded = self.pageloaded()
     if loaded:
       print("Checking requirements for " + mission.getName())
