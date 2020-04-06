@@ -119,7 +119,7 @@ class MissonChiefBot:
     print("Building New Missions")
     logger.debug("Grabbing mission urls and hrefs")
     browser.get(url)
-    links = browser.find_elements_by_xpath("//a[contains(@href,'missions')]")
+    links = browser.find_elements_by_xpath("//div[contains(@id,'missions')]/div/div[not(contains(@class,'mission_alliance_distance_hide') or contains(@class,'mission_deleted'))]/div/div/a[contains(@href,'missions')]")
     checked = 0
     currBatchNum = 0
     for link in links:
