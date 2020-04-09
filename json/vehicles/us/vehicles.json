@@ -1,45 +1,61 @@
 {
-			"firetrucks": [
-			"Type 1 fire engine",
-			"Type 2 fire engine",
-			"Quint",
-			"Rescue Engine"
-        ],
-			"battalion chief vehicles": [
-			"Battalion chief unit"
-        ],
-            "mobile command vehicles": [
-			"mcv"
-        ],
-			"platform truck": [
-			"Platform truck"
-        ],
-			"heavy rescue vehicles": [
-			"Heavy rescue vehicle"
-        ],
-			"water tankers": [
-			"Water Tanker"
-        ],
-			"mobile air vehicles": [
-			"Mobile air"
-        ],
-			"hazmat vehicles": [
-			"HazMat"
-        ],
-			"police cars": [
-			"Patrol car"
-        ],
-			"k-9 units": [
-			"K-9 Unit"
-        ],
-			"ambulance": [
-			"Ambulance"
-        ],
-			"ambulances": [
-			"required on some missions",
-			"Ambulance"
-        ],
-			"swat personnel": [
-			"SWAT SUV"
-        ]
+	"firetrucks": [
+	"Type 1 fire engine",
+	"Type 2 fire engine",
+	"Quint",
+	"Rescue Engine"
+],
+	"battalion chief vehicles": [
+	"Battalion chief unit"
+],
+	"mobile command vehicles": [
+	"mcv"
+],
+	"platform truck": [
+	"Platform truck"
+],
+	"heavy rescue vehicles": [
+	"Heavy rescue vehicle"
+],
+	"water tankers": [
+	"Water Tanker"
+],
+	"mobile air vehicles": [
+	"Mobile air"
+],
+	"hazmat vehicles": [
+	"HazMat"
+],
+	"police cars": [
+	"Patrol car"
+],
+	"k-9 units": [
+	"K-9 Unit"
+],
+	"ambulance": [
+	"Ambulance",
+	"ALS Ambulance"
+],
+	"ambulances": [
+	"required on some missions",
+	"Ambulance",
+	"ALS Ambulance"
+],
+	   "arff" : [
+	"ARFF Crash Tender"
+],
+	"boats" : [
+	"Heavy Rescue + Boat",
+	"Boat Trailer"
+],
+	"swat personnel": [
+	"SWAT SUV"
+],
+"wildland fire engines": [
+	"Type 3 engine",
+	"Type 5 engine",
+	"Type 7 engine",
+	"Pumper Tanker",
+	"Crew Carrier"
+]
 }
