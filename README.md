@@ -23,7 +23,9 @@ Download the code [here](https://github.com/codesidian/Python-MissionChiefBot/ar
 
 Once done open the `config.ini` inside the config folder and replace corresponding `email` and `password` with your account information, and `server` with the country  your account is registered on such as `uk`. All working countries will be in the `server.ini`
 `mission_batch_amount` is the amount of missions it will do per batch, so if it finds 100 missions. It will do the set amount.
-If you don't want to see the browser window set `headless_mode` to `true`
+If you don't want to see the browser window set `headless_mode` to `true`.
+If you need the bot to transport patients etc, please set `run_despatcher` to `true`.
+
 
 ### Windows
 Once you're done double click the `run.bat` located in the main folder. This will force check any requirements and run the script for you. 

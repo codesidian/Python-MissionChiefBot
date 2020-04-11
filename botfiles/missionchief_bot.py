@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 import platform, os, sys, logging, configparser, json, time
 from helpers import randomsleep
@@ -7,13 +8,10 @@ from colorama import init,Fore,Style
 from vehicle import Vehicle
 from mission import Mission
 from despatch import Despatch
-from threading import Thread
-
 import chromedriver_autoinstaller
 
 
 
-init()
 
 
 #Skip doing missions, just build data. (for testing)
@@ -46,7 +44,7 @@ class MissonChiefBot:
     self.vehicleList = []
     self.despatches = []
     self.missionsSeen = []
-    
+    init()
     logger.info("Attempting login")
     logged_in = login(username,password,browser)
     if logged_in:
@@ -68,7 +66,7 @@ class MissonChiefBot:
     else: 
       print("Couldn't log in...")
   def pageloaded(self): 
-   browser.execute_script('return document.readyState;')
+   WebDriverWait(browser, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
    return True
 
 
@@ -142,22 +140,19 @@ class MissonChiefBot:
               if mission.getID() == missionId:
                 #since the mission is already in the list, we can continue it.
                 raise AlreadyExistsException()
+            browser.get(BASE_URL + "missions/"+missionId)    
+            missionName = browser.find_element_by_id('missionH1').text 
             with open('../json/missions.json') as missions_json:
               mdata = json.load(missions_json)
-              if missionId in mdata['missions']: 
+              if missionName in mdata['missions']: 
                 logger.debug("Mission exists in JSON file")
-                mission = mdata['missions'][missionId]
+                mission = mdata['missions'][missionName]
                 requirements = json.loads(mission['requirements'])
-                currMission = Mission(missionId,mission['missionName'],requirements)
+                currMission = Mission(missionId,missionName,requirements)
               else:
                logger.debug("Mission does not exists in JSON file")
                logger.debug("%i/%i missions checked against batch amount",currBatchNum,MISSION_BATCH_NUM)
                logger.debug("Getting vehicle info for %s", missionId)
-               browser.get(BASE_URL + "missions/"+missionId)
-               try:
-                missionName = browser.find_element_by_id('missionH1').text 
-               except Exception as e:
-                continue
                logger.debug("Mission name is %s", missionName)    
                logger.debug("Getting requirements for %s",missionId)   
                requirements = getRequirements(missionId)
@@ -165,9 +160,8 @@ class MissonChiefBot:
                currMission = Mission(missionId,missionName,requirements)
                with open('../json/missions.json', 'w') as outfile:
                   logger.debug("Buidling mission JSON object")
-                  mdata['missions'][missionId] = {}
-                  mdata['missions'][missionId]['missionName'] = missionName
-                  mdata['missions'][missionId]['requirements'] = json.dumps(requirements,indent=4)
+                  mdata['missions'][missionName] = {}
+                  mdata['missions'][missionName]['requirements'] = json.dumps(requirements,indent=4)
                   logger.debug("Adding mission to JSON file")
                   json.dump(mdata,outfile,sort_keys=True,indent=4)
 
@@ -258,7 +252,11 @@ class MissonChiefBot:
       logger.info("Doing missions")
       for mission in self.missionList:
         browser.get(BASE_URL)
-        missionColor = browser.find_element_by_xpath('//div[contains(@id, "mission_panel_'+mission.getID()+'")]').get_attribute('class')
+        try:
+         missionColor = browser.find_element_by_xpath('//div[contains(@id, "mission_panel_'+mission.getID()+'")]').get_attribute('class')
+        except NoSuchElementException as e:
+          # The panel does not exist, mission completed or timed out.
+          continue
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
         if mission not in self.despatches and "mission_panel_red" in missionColor:
           logger.debug("It hasn't, despatching.")
@@ -356,31 +354,17 @@ class MissonChiefBot:
               except (NoSuchElementException, ElementClickInterceptedException) as e: 
                 logger.error("Vehicle checkbox cannot be found, or clicked" + ownedVehicle.getID())
                 continue
-             
             #we can skip the next categories as this requirement has now been fulfilled
             break
       except NothingToDespatch as e:
         logger.error("There's nothing to despatch: %s",e)
-        continue            
+        continue
     # If units have been checked, we need to despatch them.
     logger.debug("Checking if there are vehicles checked")
     if checkedunits:
       logger.debug("Submitting mission")
       browser.find_element_by_name('commit').click()
       # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
-      if requirement['requirement']=="ambulance":
-        browser.get(BASE_URL + "missions/"+mission.getID())
-        # Wait first couple seconds to wait for JS to init the time.
-        time.sleep(2)
-        remaining = browser.find_elements_by_xpath('//td[contains(@id, "vehicle_drive")]')[0].text
-        mins = int(remaining.split(":")[0].replace(":","")) * 60
-        seconds = int(remaining.split(":")[1].replace(":",""))
-        wait = (mins + seconds) * 2
-      # We push it to a new thread, preventing the current operation stalling.
-        thread = Thread(target = transport, args = (mission,wait, ))
-        print("Opening thread for ambulance")
-        thread.start()
-        pass
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
 
@@ -476,37 +460,16 @@ def getRequirements(missionId):
      requiredlist.append({'requirement':'ambulance','qty': 1 })
     return requiredlist
 
-def transport(mission,waittime):
-  print("Waiting to transport in seperate thread")
-  try:
-    # Login to the second window.
-    print(f"Ambulance waiting {waittime} seconds to despatch patient")
-    time.sleep(waittime)
-    browser2 = webdriver.Chrome(options=chrome_options)
-    login(username,password,browser2)
-    browser2.get(BASE_URL + "missions/"+mission.getID())
-    browser2.refresh()
-    browser2.find_element_by_id("process_talking_wish_btn").click()
-    browser2.find_elements_by_xpath('//a[contains(@href, "patient")]')[0].click()
-    browser2.close()
-    print(f"Transport sucessful for {mission.getName()}")
-  except NoSuchElementException as e:
-    print("Unable to transport ambulance, either timed out or failed.")
-    logger.debug("Is ambulance but no patient to send anywhere..")
-    browser2.close()
-
 logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
+
 config = configparser.ConfigParser()
 config.read('../config/config.ini')
-#BASE_URL = config['DEFAULT']['url']
 SERVER = config['DEFAULT']['server']
 MISSION_BATCH_NUM = int(config['DEFAULT']['mission_batch_amount'])
 username = config['DEFAULT']['email'].strip()
 password = config['DEFAULT']['password'].strip()
-#print("Selected server ", SERVER)
-
 servers = configparser.ConfigParser()
 servers.read('../config/server.ini')
 BASE_URL = servers[SERVER]['url']
@@ -517,9 +480,13 @@ SERVER_REGION = servers[SERVER]['name']
 chromedriver_autoinstaller.install() 
 
 chrome_options = Options()  
+
 if config['DEFAULT'].getboolean('headless_mode'):
   chrome_options.add_argument("--headless")  
-
+if config['DEFAULT'].getboolean('run_despatcher'):
+  os.system("start cmd /k py despatcher.py && python3 despatcher.py && python despatcher.py")
+  
+  
 if "pytest" in sys.modules:
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
