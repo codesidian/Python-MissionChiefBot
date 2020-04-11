@@ -25,7 +25,7 @@ class MissionChiefDespatcher():
        browser.get(BASE_URL)
        if self.pageloaded():
         try:
-          transports = browser.find_elements_by_xpath("//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@title,'Transport Request')]/following-sibling::a[contains(@href,'missions')]")
+          transports = browser.find_elements_by_xpath("//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@class,'building_list_fms_5')]/following-sibling::a[contains(@href,'missions')]")
         except (NoSuchElementException,ElementClickInterceptedException):
           print("Nothing found that needs transporting.. sleeping")
           time.sleep(120)
