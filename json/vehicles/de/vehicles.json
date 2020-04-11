@@ -1,39 +1,46 @@
 {
-			"Löschfahrzeuge": [
-			"LF 10",
-			"LF 20"
-		],
-			"Rüstwagen": [
-			""
-		],
-			"Feuerwehrkräne (FwK)": [
-			""
-		],
-			"GW L 2 Wasser": [
-			""
-		],
-			"GKW": [
-			""
-		],
-			"MzKW": [
-			""
-		],
-			"MTW-TZ": [
-			""
-		],
-			"Boote": [
-			""
-		],
-			"GW-Taucher": [
-			""
-		],
-			"Streifenwagen": [
-			""
-		],
-			"ELW 1": [
-			""
-		],
-			"ELW 2": [
-			""
-		]
+    "Löschfahrzeuge": [
+        "LF 10",
+        "LF 20",
+        "LF 20/16",
+        "LF 8/6",
+        "LF 10/6",
+        "LF 16-TS",
+        "TSF-W",
+        "KLF",
+        "MLF"
+    ],
+    "Rüstwagen": [
+        ""
+    ],
+    "Feuerwehrkräne (FwK)": [
+        "Fwk"
+    ],
+    "GW L 2 Wasser": [
+        "GW-Messtechnik"
+    ],
+    "GKW": [
+        ""
+    ],
+    "MzKW": [
+        ""
+    ],
+    "MTW-TZ": [
+        ""
+    ],
+    "Boote": [
+        ""
+    ],
+    "GW-Taucher": [
+        ""
+    ],
+    "Streifenwagen": [
+        "FuStW"
+    ],
+    "ELW 1": [
+        "ELW 1"
+    ],
+    "ELW 2": [
+        "ELW 2"
+    ]
 }
