@@ -8,22 +8,27 @@ import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
+from selenium.webdriver.support.ui import WebDriverWait
 from colorama import init,Fore,Style
 
 class MissionChiefDespatcher():
  def __init__(self):
   init()
   self.handleDespatch()
+ def pageloaded(self): 
+   WebDriverWait(browser, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+   return True
  def handleDespatch(self):
      logged_in = login(username,password,browser)
      if logged_in: 
       while True:
        browser.get(BASE_URL)
-       try:
-        transports = browser.find_elements_by_xpath("//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@title,'Transport Request')]/following-sibling::a[contains(@href,'missions')]")
-       except NoSuchElementException:
-        print("Nothing found that needs transporting.. sleeping")
-        time.sleep(120)
+       if self.pageloaded():
+        try:
+          transports = browser.find_elements_by_xpath("//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@title,'Transport Request')]/following-sibling::a[contains(@href,'missions')]")
+        except (NoSuchElementException,ElementClickInterceptedException):
+          print("Nothing found that needs transporting.. sleeping")
+          time.sleep(120)
         
         
        hrefs = []
@@ -33,10 +38,18 @@ class MissionChiefDespatcher():
         
        for href in hrefs:
         browser.get(href)
-        browser.find_element_by_id("process_talking_wish_btn").click()
-        transportbtn = browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0]
-        browser.execute_script("arguments[0].scrollIntoView();", transportbtn)
-        transportbtn.click()
+        if self.pageloaded():
+          transport = browser.find_elements_by_id("process_talking_wish_btn")
+          threfs = []
+          for t in transport:
+            # We again push them to a new href list, so that we dont get a stale element.
+            threfs.append(t.get_attribute('href'))
+          for thref in threfs:
+            browser.get(thref)
+            transportbtn = browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0]
+            browser.execute_script("arguments[0].scrollIntoView();", transportbtn)
+            transportbtn.click()
+            browser.back()
        print("Transported all found sleeping")
        time.sleep(120)
      else:
