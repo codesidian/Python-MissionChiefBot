@@ -46,7 +46,7 @@ class MissionChiefDespatcher():
             threfs.append(t.get_attribute('href'))
           for thref in threfs:
             browser.get(thref)
-            transportbtn = browser.find_elements_by_xpath('//a[contains(@href, "patient")]')[0]
+            transportbtn = browser.find_elements_by_xpath('//a[contains(@href, "patient")][contains(@class,"btn-success")]')[0]
             browser.execute_script("arguments[0].scrollIntoView();", transportbtn)
             transportbtn.click()
             browser.back()
