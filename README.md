@@ -44,7 +44,7 @@ If you'd like to increase the speed of the bot, I would recommend running `gener
 
 If you have any issues and would like to let us know directly, please join our discord.
 <p align="center">
-  <a href="https://discord.gg/DshUEeg">
+  <a href="https://discord.gg/fxKtSuD">
     <img src="https://discordapp.com/api/guilds/676191159638425620/widget.png?style=banner2" />
   </a>
 </p>
