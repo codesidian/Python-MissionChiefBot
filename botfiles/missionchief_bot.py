@@ -483,6 +483,8 @@ chrome_options = Options()
 
 if config['DEFAULT'].getboolean('headless_mode'):
   chrome_options.add_argument("--headless")  
+  chrome_options.add_argument("log-level=3")  
+
 if config['DEFAULT'].getboolean('run_despatcher'):
   os.system("start cmd /k py despatcher.py && python3 despatcher.py && python despatcher.py")
   

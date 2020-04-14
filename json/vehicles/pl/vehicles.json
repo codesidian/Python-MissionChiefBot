@@ -1,31 +1,30 @@
 {
-		"samochody pożarnicze":[
-		 "Ciężki samochód gaśniczy",
-		 "Średni samochód gaśniczy"
-		],
-		"samochody szefa brygady":[
-		 "Samochód szefa brygady",
-		 "Samochód Dowodzenia i Łączności"
-		],
-		"samochody ratownictwa technicznego":[
-		 "Samochód ratownictwa technicznego"
-		],
-		"cysterny z wodą":[
-		 "Cysterna gaśnicza"
-		],
-		"SP wysokościowe":[
-		 "Drabina mechaniczna"
-		],
-		"SP Rchem":[
-		 "Samochód ratownictwa chemicznego"
-		],
-		"samochody SPGaz":[
-		 "SPGaz"
-		],
-		"radiowozy":[
-		 "Radiowóz"
-		],
-		"ambulance":[
-		 "Ambulans P"
-		]
+	"samochody pożarnicze":[
+	 "Ciężki samochód gaśniczy",
+	 "Średni samochód gaśniczy"
+	],
+	"samochody szefa brygady":[
+	 "Samochód szefa brygady",
+	  "Samochód oficera operacyjnego"
+	],
+	 "Samochód ratownictwa technicznego"
+	],
+	"cysterny z wodą":[
+	 "Cysterna gaśnicza"
+	],
+	"SP wysokościowe":[
+	 "Drabina mechaniczna"
+	],
+	"SP Rchem":[
+	 "Samochód ratownictwa chemicznego"
+	],
+	"samochody SPGaz":[
+	 "SPGaz"
+	],
+	"radiowozy":[
+	 "Radiowóz"
+	],
+	"ambulance":[
+	 "Ambulans P"
+	]
 }

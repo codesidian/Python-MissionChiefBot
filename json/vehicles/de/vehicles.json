@@ -1,5 +1,7 @@
 {
     "Löschfahrzeuge": [
+		"HLF 20",
+		"HLF 10",
         "LF 10",
         "LF 20",
         "LF 20/16",
@@ -11,16 +13,30 @@
         "MLF"
     ],
     "Rüstwagen": [
-        ""
+        "RW",
+		"HLF 10",
+		"HLF 20"
+    ],
+	"Drehleitern": [
+        "DLK 23"
     ],
     "Feuerwehrkräne (FwK)": [
         "Fwk"
     ],
-    "GW L 2 Wasser": [
+    "GW-A": [
+        "GW-A"
+    ],
+	"GW-Öl": [
+        "GW-Öl"
+    ],
+    "GW-Mess": [
         "GW-Messtechnik"
     ],
-    "GKW": [
-        ""
+	"GW-Gefahrgut": [
+        "GW-Gefahrgut"
+    ],
+	"GW-Höhenrettung": [
+        "GW-Höhenrettung"
     ],
     "MzKW": [
         ""
@@ -42,5 +58,8 @@
     ],
     "ELW 2": [
         "ELW 2"
+    ],
+    "ambulance" : [
+        "RTW"
     ]
 }
