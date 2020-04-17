@@ -39,6 +39,9 @@ Once you're done double click the `run.bat` located in the main folder. This wil
 ## Increase speed
 If you'd like to increase the speed of the bot, I would recommend running `generatemissions.bat` or run `generate.py` (located in the botfiles folder) before running the bot, this will cache/save all the missions it can find with requirements ready for the bot to read.
 
+## How to run the bot for 24 hours a day, without relying on your own computer
+If you're interested in how to run this bot all day, for as little as $5 a month please follow the following guide:
+[https://github.com/jackbayliss/MissionChiefBot-linux](https://github.com/jackbayliss/MissionChiefBot-linux)
 
 ## Issues / Bugs / Errors
 
