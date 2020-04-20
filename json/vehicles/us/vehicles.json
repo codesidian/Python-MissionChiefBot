@@ -3,7 +3,8 @@
 	"Type 1 fire engine",
 	"Type 2 fire engine",
 	"Quint",
-	"Rescue Engine"
+	"Rescue Engine",
+	"Pumper Tanker"
 ],
 	"battalion chief vehicles": [
 	"Battalion chief unit"
@@ -12,12 +13,14 @@
 	"mcv"
 ],
 	"platform truck": [
-	"Platform truck"
+	"Platform truck",
+	"Quint"
 ],
 	"heavy rescue vehicles": [
 	"Heavy rescue vehicle"
 ],
 	"water tankers": [
+	"Pumper Tanker",
 	"Water Tanker"
 ],
 	"mobile air vehicles": [
@@ -36,8 +39,9 @@
 	"ambulance",
 	"als ambulance"
 ],
-"ambulance": [
- "ambulance"
+	"ambulance": [
+	"ambulance",
+	"als ambulance"
 ],
 	 "arff" : [
 	"ARFF Crash Tender"
