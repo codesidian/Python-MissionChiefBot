@@ -258,14 +258,14 @@ class MissonChiefBot:
           # The panel does not exist, mission completed or timed out.
           continue
         logger.debug("Checking if %s has already been dispatched", mission.getName().encode("UTF-8"))
-        if mission not in self.despatches and "mission_panel_red" in missionColor:
+        if mission not in self.despatches and "mission_panel_red" in missionColor and mission.getName() not in missionsignored:
           logger.debug("It hasn't, despatching.")
           self.despatchVehicles(mission)
         else:
           logger.debug("Checking if %s is partial despatch", mission.getName())
           #We need to make sure that there's no missions with half dispatches (if there weren't enough vehicles to begin with)
           for despatch in self.despatches:
-            if despatch == mission and "mission_panel_red" in missionColor:
+            if despatch == mission and "mission_panel_red" in missionColor and mission.getName() not in missionsignored:
               totalVehiclesRequired = 0
               for requirement in mission.getRequirements():
                 totalVehiclesRequired += int(requirement['qty'])
@@ -449,16 +449,16 @@ def getRequirements(missionId):
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
-     if not r.text.isdigit() and len(r.text)>0:
-        requirement =  r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
-        qty = requirements[index+1].text
-        print(f"Requirement found : {str(qty)} x {str(requirement)}")
-        requiredlist.append({'requirement':requirement,'qty': qty })
-    print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
-    if len(requiredlist)==0:
-     logger.warning("No requirements were found, appending 1 ambulance?")
-     requiredlist.append({'requirement':'ambulance','qty': 1 })
-    return requiredlist
+      if r.text:
+        if "Required" in r.text or "Patients" in r.text or "Patientenanzahl" in r.text or "Patienter" or "Pacientes" in r.text or "Pazienti" in r.text or "Patiënten" in r.text or "Pasienter" in r.text or "Pacjenci" in r.text or "Пациенты" in r.text or "Pacienți" in r.text or "Wymagany" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text:
+         if "Station" not in r.text and "posterunki" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningsstationer" not in r.text:
+          requirement = r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
+          qty = requirements[index+1].text
+          print(f"Requirement found :   {str(qty)} x {str(requirement)}")
+          requiredlist.append({'requirement':requirement,'qty': qty })
+  if(len(requiredlist)==0):
+   requiredlist.append({'requirement':'ambulance','qty': 1 })
+  return requiredlist
 
 logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
@@ -500,7 +500,8 @@ browser = webdriver.Chrome(options=chrome_options)
 with open('../json/vehicles/'+SERVER+'/vehicles.json',encoding="utf8") as reqlink:
   vehicles = json.load(reqlink)
 
-  
+with open('../json/missionsignored.json',encoding="utf8") as ignored:
+  missionsignored = json.load(ignored)['ignored']
 def begin():
  MissonChiefBot()
 

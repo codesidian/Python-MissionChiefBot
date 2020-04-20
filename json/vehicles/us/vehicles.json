@@ -32,16 +32,14 @@
 	"k-9 units": [
 	"K-9 Unit"
 ],
-	"ambulance": [
-	"Ambulance",
-	"ALS Ambulance"
+	"max. patients": [
+	"ambulance",
+	"als ambulance"
 ],
-	"ambulances": [
-	"required on some missions",
-	"Ambulance",
-	"ALS Ambulance"
+"ambulance": [
+ "ambulance"
 ],
-	   "arff" : [
+	 "arff" : [
 	"ARFF Crash Tender"
 ],
 	"boats" : [

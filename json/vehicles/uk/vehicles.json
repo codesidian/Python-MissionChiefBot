@@ -27,8 +27,11 @@
 			"incident command and control units": [
 			"ICCU"
         ],
-			"ambulance": [
+			"max. patients": [
             "Ambulance"
-        ]
+		],
+		"ambulance": [
+		"Ambulance"
+		]
 
 }

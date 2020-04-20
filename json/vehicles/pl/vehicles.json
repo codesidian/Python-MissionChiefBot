@@ -25,7 +25,10 @@
 	"radiowozy":[
 	 "Radiowóz"
 	],
-	"ambulance":[
+	"Maks. Pacjenci":[
 	 "Ambulans P"
-	]
+	],
+	"ambulance": [
+	"Ambulans P"
+	   ]
 }

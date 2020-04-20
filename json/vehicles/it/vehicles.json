@@ -28,7 +28,10 @@
 			"Pattuglie": [
 			"Volante"
 		],
-			"ambulance": [
+			"Max Pazienti": [
 			"Ambulanza BLSD"
+		],
+		"ambulance": [
+		 "Ambulanza BLSD"
 		]
 }
