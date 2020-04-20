@@ -1,7 +1,7 @@
 ![Build Status](https://github.com/codesidian/Python-MissionChiefBot/workflows/Mission%20Chief%20Tests/badge.svg)
-# Python Mission Chief Bot
+# The Free Mission Chief Bot
 
-A small bot for the game missionchief written in Python
+A bot written to automate the grinding and boring jobs of the bot, simply follow the guide and let it run. No fee to pay, no license required. 
 
 **This bot is meant for use with standard Chrome, please do not use any MissionChief mods, such as LSS manager as it may affect the bot.**
 
@@ -9,7 +9,7 @@ A small bot for the game missionchief written in Python
 - Open source, no hidden viruses.
 - Automatic despatching.
 - Ability to read missions requirements.
-- Practically undetectable, using only user avaiable buttons and pages- no API calls.
+- Practically undetectable, using only user avaiable buttons and pages- no API calls all using the browser.
 - Hide the browser from opening - set `headless_mode` to `true` in your config.ini.
 - Send only a batch of missions at a time - set `mission_batch_amount` to the amount required in your config.ini.
 - Super fast, the bot caches any vehciles and mission it comes across.
