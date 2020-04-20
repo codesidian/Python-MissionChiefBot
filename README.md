@@ -3,7 +3,7 @@
 
 A bot written to automate the grinding and boring jobs of the bot, simply follow the guide and let it run. No fee to pay, no license required. 
 
-**This bot is meant for use with standard Chrome, please do not use any MissionChief mods, such as LSS manager as it may affect the bot.**
+**The bot uses chromedriver in order to emulate the user, this helps with going undetected so please ensure you have Chrome installed.**
 
 ## Features
 - Open source, no hidden viruses.
