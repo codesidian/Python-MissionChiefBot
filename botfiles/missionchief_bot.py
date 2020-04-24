@@ -294,11 +294,6 @@ class MissonChiefBot:
     print(f"Going to mission {mission.getName()}")
     logger.debug("Visiting the url")
     browser.get(BASE_URL + "missions/"+mission.getID())
-    try:
-      browser.find_element_by_xpath('//a[contains(@href, "easteregg")]').click()
-      print(Fore.YELLOW + "Egg was clicked" + Style.RESET_ALL)
-    except (NoSuchElementException,ElementClickInterceptedException) as e:
-      print(Fore.YELLOW + "There was no egg or failed to click" + Style.RESET_ALL)
     loaded = self.pageloaded()
     if loaded:
       print("Checking requirements for " + mission.getName())
