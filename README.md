@@ -1,10 +1,15 @@
+___
+A new version of this bot has been released which you can find [here](https://github.com/jackbayliss/Mission-Chief-Bot)
+That however means we'll be focusing more on the newer version, which is around 400% quicker. Although any **MAJOR** bugs will still be supported on this version. If you're planning to run on either MACOS or Linux I would use this version rather than the newer version for now.
+___
+
+
 ![Build Status](https://github.com/codesidian/Python-MissionChiefBot/workflows/Mission%20Chief%20Tests/badge.svg)
 # The Free Mission Chief Bot
 
 A bot written to automate the grinding and boring jobs of the bot, simply follow the guide and let it run. No fee to pay, no license required. 
 
 **The bot uses chromedriver in order to emulate the user, this helps with going undetected so please ensure you have Chrome installed.**
-
 ## Features
 - Open source, no hidden viruses.
 - Automatic despatching.
