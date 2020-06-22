@@ -1,4 +1,26 @@
-{
-
-		
+{	
+"Brandbil":[
+"Autosprøjte",
+"Slangetender",
+"Specialsprøjte"
+],
+"Andet sluknigsredskab":[
+"Stigevogn",
+"Indsatsleder",
+"Redningsvogn",
+"Tankvogn",
+"CBRN",
+"Højtrykskompressor",
+"LKM"
+],
+"Ambulance":[
+"Ambulance"
+],
+"Politi":[
+"Patruljevogn",
+"AKS Pansret mandskabsvogn",
+"Hundepatrulje",
+"Politimotorcykel",
+"AKS Patruljevogn"
+]
 }
