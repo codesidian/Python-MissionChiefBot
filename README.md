@@ -1,6 +1,7 @@
 ___
+## v2
 A new version of this bot has been released which you can find [here](https://github.com/jackbayliss/Mission-Chief-Bot)
-That however means we'll be focusing more on the newer version, which is around 400% quicker. Although any **MAJOR** bugs will still be supported on this version. If you're planning to run on either MACOS or Linux I would use this version rather than the newer version for now.
+That however means we'll be focusing more on the newer version, which is around 400% quicker. Although any **MAJOR** bugs will still be supported on this version. 
 ___
 
 
