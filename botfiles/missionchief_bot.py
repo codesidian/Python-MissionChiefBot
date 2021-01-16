@@ -455,7 +455,7 @@ def getRequirements(missionId):
    requiredlist.append({'requirement':'ambulance','qty': 1 })
   return requiredlist
 
-logger = setup_logger('botLogger','debug.log',level=logging.FATAL)
+logger = setup_logger('botLogger','debug.log',level=logging.CRITICAL)
 operatingsystem = platform.system()
 path = os.path.dirname(os.path.realpath(__file__))
 
