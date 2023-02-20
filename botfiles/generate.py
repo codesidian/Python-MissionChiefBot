@@ -1,20 +1,21 @@
 
 import platform, os, sys, logging, configparser, json, time, chromedriver_autoinstaller
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 # Grabs all the missions we can find, and generates a .JSON file for each one.
 def getMissions():
  hrefs = []
  browser.get(BASE_URL + "/einsaetze");
- links = browser.find_elements_by_xpath("//a[contains(@href,'einsaetze')]")
+ links = browser.find_elements(By.XPATH, "//a[contains(@href,'einsaetze')]")
  for link in links:
     hrefs.append(link.get_attribute('href'))
   
  for href in hrefs:
     missionId = href.split('/')[4]
     browser.get(href)
-    missionName = browser.find_element_by_tag_name('h1').text
+    missionName = browser.find_element(By.TAG_NAME, 'h1').text
     requirements = getRequirements()
     jsonpath = '../json/missions/' + SERVER  + '/'
     if not os.path.exists(jsonpath):
@@ -28,17 +29,15 @@ def getMissions():
 
 # Grabs the requirements
 def getRequirements():
-  requirements = browser.find_elements_by_tag_name('td')
+  requirements = browser.find_elements(By.TAG_NAME, 'table')[1].find_elements(By.TAG_NAME, 'td')
   requiredlist = []
   for index, r in enumerate(requirements):
-    if r.text:
-      if "Required" in r.text or "Patients" in r.text or "Patientenanzahl" in r.text or "Patienter" in r.text or "Pacientes" in r.text or "Pazienti" in r.text or "Patiënten" in r.text or "Pasienter" in r.text or "Pacjenci" in r.text or "Пациенты" in r.text or "Pacienți" in r.text or "Wymagany" in r.text or "Требуемые" in r.text or "Benodigde" in r.text or "benodigd" in r.text or "Nödvändiga" in r.text or "richieste" in r.text or "richiesta" in r.text or "richiesti" in r.text or "Benötigte" in r.text or "Wymagane" in r.text or "Požadované" in r.text or "Pacienti" in r.text:
-       if "Station" not in r.text and "posterunki" not in r.text and "Caserme" not in r.text and "Stazioni" not in r.text and "Possibilità" not in r.text and "Possibile" not in r.text and "brandstationer" not in r.text and "räddningsstationer" not in r.text and "stanice" not in r.text:
-        requirement = r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").replace("Požadované","").strip().lower()
+    if not r.text.isdigit() and len(r.text)>0:
+        requirement = r.text.replace('Required','').replace('Wymagane','').replace('Wymagany','').replace('Требуемые','').replace("Benodigde",'').replace("benodigd",'').replace("Nödvändiga","").replace("richieste","").replace("richiesti","").replace("richiesta","").replace("Benötigte","").strip().lower()
         qty = requirements[index+1].text
-        print(f"Requirement found :   {str(qty)} x {str(requirement)}")
+        print(f"Requirement found : {str(qty)} x {str(requirement)}")
         requiredlist.append({'requirement':requirement,'qty': qty })
-  if(len(requiredlist)==0):
+  if len(requiredlist)==0:
    requiredlist.append({'requirement':'ambulance','qty': 1 })
   return requiredlist
 

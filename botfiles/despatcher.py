@@ -7,6 +7,7 @@ import platform, os, sys, logging, configparser, json, time
 import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from colorama import init,Fore,Style
@@ -25,7 +26,7 @@ class MissionChiefDespatcher():
        browser.get(BASE_URL)
        if self.pageloaded():
         try:
-          transports = browser.find_elements_by_xpath("//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@class,'building_list_fms_5')]/following-sibling::a[contains(@href,'missions')]")
+          transports = browser.find_elements(By.XPATH, "//ul[contains(@id,'radio_messages_important')]/li[not(contains(@style,'display:none'))]/span[contains(@class,'building_list_fms_5')]/following-sibling::a[contains(@href,'missions')]")
         except (NoSuchElementException,ElementClickInterceptedException):
           print("Nothing found that needs transporting.. sleeping")
           time.sleep(120)
@@ -39,14 +40,14 @@ class MissionChiefDespatcher():
        for href in hrefs:
         browser.get(href)
         if self.pageloaded():
-          transport = browser.find_elements_by_id("process_talking_wish_btn")
+          transport = browser.find_elements(By.ID, "process_talking_wish_btn")
           threfs = []
           for t in transport:
             # We again push them to a new href list, so that we dont get a stale element.
             threfs.append(t.get_attribute('href'))
           for thref in threfs:
             browser.get(thref)
-            transportbtn = browser.find_elements_by_xpath('//a[contains(@href, "patient")][contains(@class,"btn-success")]')[0]
+            transportbtn = browser.find_elements(By.XPATH, '//a[contains(@href, "patient")][contains(@class,"btn-success")]')[0]
             browser.execute_script("arguments[0].scrollIntoView();", transportbtn)
             transportbtn.click()
             browser.back()
@@ -68,17 +69,17 @@ def login(username,password,browser):
     browser.get(url)
     
     # Filling in login information
-    user =  browser.find_element_by_id('user_email')
-    passw = browser.find_element_by_id('user_password')
+    user =  browser.find_element(By.ID, 'user_email')
+    passw = browser.find_element(By.ID, 'user_password')
     user.send_keys(username)
     passw.send_keys(password)
     # Submitting login
     logger.info("Submitting login form")
-    browser.find_element_by_name('commit').click()
+    browser.find_element(By.NAME, 'commit').click()
     try: 
      # check we are logged in- by grabbing a random tag only visible on log in.
      logger.debug("Checking if logged in")
-     alliance = browser.find_element_by_id('alliance_li')
+     alliance = browser.find_element(By.ID, 'alliance_li')
      if alliance.get_attribute('class')=="dropdown":
       logger.debug("Element found, user is logged in")
       print("Logged in")
