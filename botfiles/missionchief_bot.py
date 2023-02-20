@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 import platform, os, sys, logging, configparser, json, time
@@ -86,7 +87,7 @@ class MissonChiefBot:
       browser.get(BASE_URL + "missions/"+oldMission.getID())
       try:
         compNum = compNum + 1
-        if browser.find_element_by_xpath("//div[contains(@class,'missionNotFound')]"):
+        if browser.find_element(By.XPATH, "//div[contains(@class,'missionNotFound')]"):
           logger.debug("%s wasn't found. Treating it as complete and removing.",oldMission.getID())
           print(Fore.GREEN + oldMission.getName() + " was completed." +Style.RESET_ALL)
           try:
@@ -117,7 +118,7 @@ class MissonChiefBot:
     print("Building New Missions")
     logger.debug("Grabbing mission urls and hrefs")
     browser.get(url)
-    links = browser.find_elements_by_xpath("//div[contains(@id,'missions')]/div/div[not(contains(@class,'mission_alliance_distance_hide') or contains(@class,'mission_deleted'))]/div/div/a[contains(@href,'missions')]")
+    links = browser.find_elements(By.XPATH, "//div[contains(@id,'missions')]/div/div[not(contains(@class,'mission_alliance_distance_hide') or contains(@class,'mission_deleted'))]/div/div/a[contains(@href,'missions')]")
     checked = 0
     currBatchNum = 0
     for link in links:
@@ -141,7 +142,7 @@ class MissonChiefBot:
                 #since the mission is already in the list, we can continue it.
                 raise AlreadyExistsException()
             browser.get(BASE_URL + "missions/"+missionId)    
-            missionName = browser.find_element_by_id('missionH1').text 
+            missionName = browser.find_element(By.ID, 'missionH1').text 
             with open('../json/missions.json') as missions_json:
               mdata = json.load(missions_json)
               if missionName in mdata['missions']: 
@@ -185,7 +186,7 @@ class MissonChiefBot:
     hrefs = []
     logger.debug("Grabbing vehicle urls and hrefs")
     browser.get(BASE_URL + "vehicles")
-    links = browser.find_elements_by_xpath("//a[contains(@href,'vehicles')]")
+    links = browser.find_elements(By.XPATH, "//a[contains(@href,'vehicles')]")
     for link in links:
         hrefs.append(link.get_attribute("href"))
     print(f"{str(len(links))} vehicles/s found")
@@ -208,11 +209,11 @@ class MissonChiefBot:
             logger.debug("Vehicle does not exist in JSON file")
             logger.debug("Getting vehicle info for %s", vehicleId)
             browser.get(BASE_URL + "vehicles/"+vehicleId)
-            vehicleName = browser.find_element_by_tag_name('h1').text.lower()
+            vehicleName = browser.find_element(By.TAG_NAME, 'h1').text.lower()
             logger.debug("Vehicle name is %s", vehicleName)
-            vehicleType = browser.find_element_by_xpath("//a[contains(@href,'fahrzeugfarbe')]").text.lower()
+            vehicleType = browser.find_element(By.XPATH, "//a[contains(@href,'fahrzeugfarbe')]").text.lower()
             logger.debug("Vehicle type is %s", vehicleType)
-            vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text
+            vehicleStatus = browser.find_element(By.XPATH, '//span[contains(@class, "building_list_fms")]').text
             logger.debug("Vehicle type is %s", vehicleStatus)
             currVehicle = Vehicle(vehicleId,vehicleName,vehicleType,vehicleStatus)
             with open('../json/vehicles.json', 'w') as outfile:
@@ -253,7 +254,7 @@ class MissonChiefBot:
       for mission in self.missionList:
         browser.get(BASE_URL)
         try:
-         missionColor = browser.find_element_by_xpath('//div[contains(@id, "mission_panel_'+mission.getID()+'")]').get_attribute('class')
+         missionColor = browser.find_element(By.XPATH, '//div[contains(@id, "mission_panel_'+mission.getID()+'")]').get_attribute('class')
         except NoSuchElementException as e:
           # The panel does not exist, mission completed or timed out.
           continue
@@ -301,9 +302,9 @@ class MissonChiefBot:
     logger.debug("Going through the requirements")
     try:
       logger.debug("Checking if there's a missing vehicles button")
-      if browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]"):
+      if browser.find_element(By.XPATH, "//a[contains(@href,'missing_vehicles')]"):
         logger.debug("Clicking missing vehicles button")
-        browser.find_element_by_xpath("//a[contains(@href,'missing_vehicles')]").click()
+        browser.find_element(By.XPATH, "//a[contains(@href,'missing_vehicles')]").click()
     except (NoSuchElementException,ElementClickInterceptedException) as e:
       logger.debug("Could not find missing vehicles")
     checkedunits = False
@@ -320,7 +321,7 @@ class MissonChiefBot:
             for vehicle in vehicles[category]:
               vehicle = vehicle.lower()
               try:
-                checkboxes = browser.find_elements_by_xpath("//input[contains(@id,'vehicle_checkbox')]")
+                checkboxes = browser.find_elements(By.XPATH, "//input[contains(@id,'vehicle_checkbox')]")
                 # Check the checkboxes against our vehicle, see if the checkbox is available.
                 for checkbox in checkboxes:
                   if des<todes:
@@ -331,7 +332,7 @@ class MissonChiefBot:
                     if ownedVehicle.getType() == vehicle and ownedVehicle.despatchable():
                       logger.debug("User has %s %s available",ownedVehicle.getType().encode("UTF-8"),category.encode("UTF-8"))
                       #print("We have a " + category + " " + ownedVehicle.getType() + " available")
-                      #vehicleStatus = browser.find_element_by_xpath('//span[contains(@class, "building_list_fms")]').text  
+                      #vehicleStatus = browser.find_element(By.XPATH, '//span[contains(@class, "building_list_fms")]').text  
                       
                       # If amount of despatched is less than required.
                       logger.debug("Checking if there required quantity as been achieved")  
@@ -358,7 +359,7 @@ class MissonChiefBot:
     logger.debug("Checking if there are vehicles checked")
     if checkedunits:
       logger.debug("Submitting mission")
-      browser.find_element_by_name('commit').click()
+      browser.find_element(By.NAME, 'commit').click()
       # If the requirement is ambulance, and it's been submitted- this code should also work for  police etc.
       print(f"{des} units despatched")
       logger.debug("%s vehicles have been despatched", des)
@@ -394,17 +395,17 @@ def login(username,password,browser):
     browser.get(url)
     
     # Filling in login information
-    user =  browser.find_element_by_id('user_email')
-    passw = browser.find_element_by_id('user_password')
+    user =  browser.find_element(By.ID, 'user_email')
+    passw = browser.find_element(By.ID, 'user_password')
     user.send_keys(username)
     passw.send_keys(password)
     # Submitting login
     logger.info("Submitting login form")
-    browser.find_element_by_name('commit').click()
+    browser.find_element(By.NAME, 'commit').click()
     try: 
      # check we are logged in- by grabbing a random tag only visible on log in.
      logger.debug("Checking if logged in")
-     alliance = browser.find_element_by_id('alliance_li')
+     alliance = browser.find_element(By.ID, 'alliance_li')
      if alliance.get_attribute('class')=="dropdown":
       logger.debug("Element found, user is logged in")
       print("Logged in")
@@ -426,7 +427,7 @@ def getRequirements(missionId):
   """
   logger.debug("Grabbing requirements for %s",missionId)
   print("Getting requirements")
-  requirementsurl = browser.find_element_by_xpath('//a[contains(@href, "einsaetze")]').get_attribute('href')
+  requirementsurl = browser.find_element(By.XPATH, '//a[contains(@href, "einsaetze")]').get_attribute('href')
   requirementId = requirementsurl.split("?")[0].split("/")[4]
   rfile = "../json/missions/" + SERVER  + '/' + requirementId + '.json'
   # If we have generated the missions, and the file exists.
@@ -440,7 +441,7 @@ def getRequirements(missionId):
     browser.get(requirementsurl)
     requiredlist = []
     logger.debug("Grabbing table elements")
-    requirements = browser.find_elements_by_tag_name('td')
+    requirements = browser.find_elements(By.TAG_NAME, 'td')
     print(Fore.YELLOW + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+Style.RESET_ALL)
     logger.debug("Looping through the table to extract each vehicle")
     for index, r in enumerate(requirements):
