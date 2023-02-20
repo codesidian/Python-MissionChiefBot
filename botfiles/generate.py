@@ -29,7 +29,7 @@ def getMissions():
 
 # Grabs the requirements
 def getRequirements():
-  requirements = browser.find_elements(By.TAG_NAME, 'table')[1].find_elements_by_tag_name('td')
+  requirements = browser.find_elements(By.TAG_NAME, 'table')[1].find_elements(By.TAG_NAME, 'td')
   requiredlist = []
   for index, r in enumerate(requirements):
     if not r.text.isdigit() and len(r.text)>0:
